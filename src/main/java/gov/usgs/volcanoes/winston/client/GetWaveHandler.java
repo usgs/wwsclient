@@ -24,6 +24,12 @@ public class GetWaveHandler extends WWSCommandHandler {
 	private final boolean isCompressed;
 	private ByteArrayOutputStream buf;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param wave object to be populated. Any existing data will be discarded.
+	 * @param isCompressed if true,request that data be compressed before sending it over the network.
+	 */
 	public GetWaveHandler(Wave wave, boolean isCompressed) {
 		this.wave = wave;
 		this.isCompressed = isCompressed;

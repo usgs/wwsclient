@@ -17,6 +17,11 @@ public class VersionHandler extends WWSCommandHandler {
 
 	private final VersionHolder version;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param version object to hold the version number
+	 */
 	public VersionHandler(VersionHolder version) {
 		super();
 		this.version = version;

@@ -24,6 +24,12 @@ public class GetScnlRsamRawHandler extends WWSCommandHandler {
 	private final boolean isCompressed;
 	private ByteArrayOutputStream buf;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param rsam object to be populated. Existing data, if any, will be disarded.
+	 * @param isCompressed if true,request that data be compressed before sending it over the network.
+	 */
 	public GetScnlRsamRawHandler(RSAMData rsam, boolean isCompressed) {
 		this.rsam = rsam;
 		this.isCompressed = isCompressed;

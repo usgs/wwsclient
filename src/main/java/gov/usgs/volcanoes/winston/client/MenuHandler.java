@@ -22,6 +22,11 @@ public class MenuHandler extends WWSCommandHandler {
 	private final List<gov.usgs.volcanoes.winston.Channel> channels;
 	private StringBuffer menu;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param channels List to be populated with channels
+	 */
 	public MenuHandler(List<gov.usgs.volcanoes.winston.Channel> channels) {
 		super();
 		linesTotal = -Integer.MAX_VALUE;

@@ -15,11 +15,19 @@ public abstract class WWSCommandHandler {
 	 */
 	protected final Semaphore sem;
 
+	/**
+	 * Constructor.
+	 */
 	public WWSCommandHandler() {
 		sem = new Semaphore(0);
 	}
-
-	/** Process response from winston */
+	
+	/**
+	 * Process response from winston.
+	 * 
+	 * @param msg received message
+	 * @throws IOException when things go wrong
+	 */
 	public abstract void handle(Object msg) throws IOException;
 
 	/**

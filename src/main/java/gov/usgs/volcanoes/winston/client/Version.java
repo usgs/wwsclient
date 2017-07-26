@@ -1,8 +1,9 @@
-package gov.usgs.volcanoes.winston;
+package gov.usgs.volcanoes.winston.client;
 
+@SuppressWarnings("javadoc")
 public final class Version {
 
-    public static final String BUILD_TIME="2017-07-26T20:50:22Z";
+    public static final String BUILD_TIME="2017-07-26T23:04:50Z";
 
     public static final String POM_VERSION="1.3.0-SNAPSHOT";
 

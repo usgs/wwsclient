@@ -24,6 +24,12 @@ public class GetScnlHeliRawHandler extends WWSCommandHandler {
 	private final boolean isCompressed;
 	private ByteArrayOutputStream buf;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param heliData object to be populated. Existing data will be discarded.
+	 * @param isCompressed if true,request that data be compressed before sending it over the network.
+	 */
 	public GetScnlHeliRawHandler(HelicorderData heliData, boolean isCompressed) {
 		this.heliData = heliData;
 		this.isCompressed = isCompressed;

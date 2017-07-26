@@ -4,7 +4,7 @@
  * https://creativecommons.org/publicdomain/zero/1.0/legalcode
  */
 
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

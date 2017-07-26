@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient.handler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import gov.usgs.plot.data.HelicorderData;
 import gov.usgs.volcanoes.core.Zip;
+import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
 
 /**

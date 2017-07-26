@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

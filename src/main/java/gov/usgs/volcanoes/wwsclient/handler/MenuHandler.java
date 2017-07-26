@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient.handler;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
 
 /**

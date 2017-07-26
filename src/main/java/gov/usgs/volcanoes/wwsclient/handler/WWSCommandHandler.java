@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient.handler;
 
 import java.io.IOException;
 import java.util.concurrent.Semaphore;

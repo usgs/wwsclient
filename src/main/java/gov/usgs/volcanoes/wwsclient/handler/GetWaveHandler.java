@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient.handler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,19 +7,20 @@ import java.nio.ByteBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.plot.data.RSAMData;
+import gov.usgs.plot.data.Wave;
 import gov.usgs.volcanoes.core.Zip;
+import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Receive and process response from a winston GETSCNLRSAMRAW request.
+ * Receive and process response from a winston GETWAVE request.
  *
  * @author Tom Parker
  */
-public class GetScnlRsamRawHandler extends WWSCommandHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GetScnlRsamRawHandler.class);
+public class GetWaveHandler extends WWSCommandHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GetWaveHandler.class);
 
-	private final RSAMData rsam;
+	private final Wave wave;
 	private int length;
 	private final boolean isCompressed;
 	private ByteArrayOutputStream buf;
@@ -27,11 +28,11 @@ public class GetScnlRsamRawHandler extends WWSCommandHandler {
 	/**
 	 * Constructor.
 	 * 
-	 * @param rsam object to be populated. Existing data, if any, will be disarded.
+	 * @param wave object to be populated. Any existing data will be discarded.
 	 * @param isCompressed if true,request that data be compressed before sending it over the network.
 	 */
-	public GetScnlRsamRawHandler(RSAMData rsam, boolean isCompressed) {
-		this.rsam = rsam;
+	public GetWaveHandler(Wave wave, boolean isCompressed) {
+		this.wave = wave;
 		this.isCompressed = isCompressed;
 		length = -Integer.MAX_VALUE;
 		buf = null;
@@ -61,7 +62,7 @@ public class GetScnlRsamRawHandler extends WWSCommandHandler {
 			if (isCompressed) {
 				bytes = Zip.decompress(bytes);
 			}
-			rsam.fromBinary(ByteBuffer.wrap(bytes));
+			wave.fromBinary(ByteBuffer.wrap(bytes));
 			sem.release();
 		} else {
 			LOGGER.debug("Still waiting for bytes. {}/{}", buf.size(), length);

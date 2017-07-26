@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston;
+package gov.usgs.volcanoes.wwsclient;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -19,15 +19,14 @@ import gov.usgs.plot.data.file.SeismicDataFile;
 import gov.usgs.volcanoes.core.data.Scnl;
 import gov.usgs.volcanoes.core.time.J2kSec;
 import gov.usgs.volcanoes.core.time.TimeSpan;
-import gov.usgs.volcanoes.winston.client.GetScnlHeliRawHandler;
-import gov.usgs.volcanoes.winston.client.GetScnlRsamRawHandler;
-import gov.usgs.volcanoes.winston.client.GetWaveHandler;
-import gov.usgs.volcanoes.winston.client.MenuHandler;
-import gov.usgs.volcanoes.winston.client.VersionHandler;
-import gov.usgs.volcanoes.winston.client.VersionHolder;
-import gov.usgs.volcanoes.winston.client.WWSClientArgs;
-import gov.usgs.volcanoes.winston.client.WWSClientHandler;
-import gov.usgs.volcanoes.winston.client.WWSCommandHandler;
+import gov.usgs.volcanoes.winston.Channel;
+import gov.usgs.volcanoes.wwsclient.handler.GetScnlHeliRawHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetScnlRsamRawHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetWaveHandler;
+import gov.usgs.volcanoes.wwsclient.handler.MenuHandler;
+import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
+import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
+import gov.usgs.volcanoes.wwsclient.handler.WWSCommandHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -344,7 +343,7 @@ public class WWSClient {
    * Here's where it all begins
    * 
    * @param args command line args
-   * @see gov.usgs.volcanoes.winston.client.WWSClientArgs
+   * @see gov.usgs.volcanoes.wwsclient.WWSClientArgs
    */
   public static void main(final String[] args) {
     try {

@@ -1,0 +1,5 @@
+# update 24-hour helicorder every 5 minutes
+*/5 * * * * wget -O RDT.png 'http://pubavo1.wr.usgs.gov:16022/heli?code=RDT_EHZ_AV&t1=-24&lb=1&tz=US/Alaska' > /dev/null 2>&1
+#
+# update 2-week rsam plot hourly
+0 * * * * wget -O RDT-RSAM.png 'http://pubavo1.wr.usgs.gov:16022/rsam?code=RDT_EHZ_AV&w=1334&h=750&t1=-1&t2=now&ds=1&dsp=300' > /dev/null 2>&1

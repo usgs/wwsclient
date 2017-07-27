@@ -2,3 +2,4 @@ target
 dependency-reduced-pom.xml
 *.swp
 /bin/
+.DS_Store

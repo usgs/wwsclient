@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class GetScnlHeliRawHandler extends WWSCommandHandler {
+public class GetScnlHeliRawHandler extends AbstractCommandHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetScnlHeliRawHandler.class);
 
 	private final HelicorderData heliData;

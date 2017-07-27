@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class GetWaveHandler extends WWSCommandHandler {
+public class GetWaveHandler extends AbstractCommandHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetWaveHandler.class);
 
 	private final Wave wave;

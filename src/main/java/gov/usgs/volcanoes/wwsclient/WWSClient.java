@@ -26,7 +26,7 @@ import gov.usgs.volcanoes.wwsclient.handler.GetWaveHandler;
 import gov.usgs.volcanoes.wwsclient.handler.MenuHandler;
 import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
 import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
-import gov.usgs.volcanoes.wwsclient.handler.WWSCommandHandler;
+import gov.usgs.volcanoes.wwsclient.handler.AbstractCommandHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -67,7 +67,7 @@ public class WWSClient {
    * @param req Request string
    * @param handler Object to handle server response
    */
-  private void sendRequest(String req, WWSCommandHandler handler) {
+  private void sendRequest(String req, AbstractCommandHandler handler) {
     EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     try {
@@ -82,7 +82,7 @@ public class WWSClient {
         }
       });
 
-      AttributeKey<WWSCommandHandler> handlerKey = WWSClientHandler.handlerKey;
+      AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
       // Start the client.
       io.netty.channel.Channel ch = b.connect(server, port).sync().channel();
       ch.attr(handlerKey).set(handler);
@@ -130,7 +130,7 @@ public class WWSClient {
     RSAMData rsam = new RSAMData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s\n",
+    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s%n",
         scnl.toString(" "), st, et, period, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlRsamRawHandler(rsam, doCompress));
 
@@ -171,7 +171,7 @@ public class WWSClient {
     Wave wave = new Wave();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s\n", scnl.toString(" "),
+    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s%n", scnl.toString(" "),
         st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetWaveHandler(wave, doCompress));
     wave.setStartTime(st);
@@ -211,7 +211,7 @@ public class WWSClient {
     HelicorderData heliData = new HelicorderData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s\n",
+    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s%n",
         scnl.toString(" "), st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlHeliRawHandler(heliData, doCompress));
 
@@ -317,7 +317,7 @@ public class WWSClient {
    */
   public List<Channel> getChannels(final boolean meta) {
     List<Channel> channels = new ArrayList<Channel>();
-    String req = String.format("GETCHANNELS: GC%s\r\n", meta ? " METADATA" : "");
+    String req = String.format("GETCHANNELS: GC%s%n", meta ? " METADATA" : "");
 
     sendRequest(req, new MenuHandler(channels));
     return channels;

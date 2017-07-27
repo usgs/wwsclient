@@ -15,12 +15,12 @@ import io.netty.util.AttributeKey;
 public class WWSClientHandler extends ChannelInboundHandlerAdapter {
 
   /** handler key */
-  public static final AttributeKey<WWSCommandHandler> handlerKey =
+  public static final AttributeKey<AbstractCommandHandler> handlerKey =
       AttributeKey.valueOf("commandHandler");
 
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
-    WWSCommandHandler handler = ctx.channel().attr(handlerKey).get();
+    AbstractCommandHandler handler = ctx.channel().attr(handlerKey).get();
     handler.handle(msg);
   }
 

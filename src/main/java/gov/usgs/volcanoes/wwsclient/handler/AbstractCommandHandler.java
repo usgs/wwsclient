@@ -8,7 +8,7 @@ import java.util.concurrent.Semaphore;
  *
  * @author Tom Parker
  */
-public abstract class WWSCommandHandler {
+public abstract class AbstractCommandHandler {
 	/**
 	 * Semaphore indicating if a read has been completed. While a request is
 	 * being processed, attempts to acquire the semaphore will block.
@@ -18,7 +18,7 @@ public abstract class WWSCommandHandler {
 	/**
 	 * Constructor.
 	 */
-	public WWSCommandHandler() {
+	public AbstractCommandHandler() {
 		sem = new Semaphore(0);
 	}
 	

@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class GetScnlRsamRawHandler extends WWSCommandHandler {
+public class GetScnlRsamRawHandler extends AbstractCommandHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetScnlRsamRawHandler.class);
 
 	private final RSAMData rsam;

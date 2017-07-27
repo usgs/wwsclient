@@ -14,7 +14,7 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class VersionHandler extends WWSCommandHandler {
+public class VersionHandler extends AbstractCommandHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VersionHandler.class);
 
 	private final VersionHolder version;

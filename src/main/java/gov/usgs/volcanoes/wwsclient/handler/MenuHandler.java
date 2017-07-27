@@ -15,7 +15,7 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class MenuHandler extends WWSCommandHandler {
+public class MenuHandler extends AbstractCommandHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MenuHandler.class);
 
 	private int linesTotal;

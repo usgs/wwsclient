@@ -98,6 +98,11 @@ public class WWSClientArgs {
 		JSAPResult jsapResult = null;
 		jsapResult = args.parse(commandLineArgs);
 
+		if (!jsapResult.success() && !jsapResult.getBoolean("help")) {
+			System.out.println("try --help");
+			System.exit(1);
+		}
+		
 		verbose = jsapResult.getBoolean("verbose");
 		timeSpan = (TimeSpan) jsapResult.getObject("timeSpan");
 		server = jsapResult.getString("server");

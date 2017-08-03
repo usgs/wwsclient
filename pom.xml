@@ -225,7 +225,7 @@
                         <archive>
                                 <manifest>
                                         <addClasspath>true</addClasspath>
-                                        <mainClass>gov.usgs.volcanoes.winston.WWSClient</mainClass>
+                                        <mainClass>gov.usgs.volcanoes.wwsclient.WWSClient</mainClass>
                                 </manifest>
                         </archive>
                 </configuration>

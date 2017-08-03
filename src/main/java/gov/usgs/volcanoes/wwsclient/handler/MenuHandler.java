@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gov.usgs.volcanoes.core.util.UtilException;
 import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
 
@@ -56,7 +57,11 @@ public class MenuHandler extends AbstractCommandHandler {
 		menu.append(chunk);
 		if (linesRead == linesTotal) {
 			for (String line : menu.toString().split("\n")) {
-				channels.add(new gov.usgs.volcanoes.winston.Channel(line));
+				try {
+					channels.add(new gov.usgs.volcanoes.winston.Channel(line));
+				} catch (UtilException e) {
+					LOGGER.error("Unable to parse server response: {}", line);
+				}
 			}
 			sem.release();
 		} else {

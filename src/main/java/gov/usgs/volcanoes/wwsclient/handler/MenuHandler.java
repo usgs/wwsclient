@@ -40,7 +40,6 @@ public class MenuHandler extends AbstractCommandHandler {
 	@Override
 	public void handle(Object msg) throws IOException {
 		ByteBuf msgBuf = (ByteBuf) msg;
-
 		if (linesTotal < 0) {
 			String header = ClientUtils.readResponseHeader(msgBuf);
 			if (header == null) {
@@ -67,7 +66,6 @@ public class MenuHandler extends AbstractCommandHandler {
 		} else {
 			LOGGER.debug("Read {} of {} channels", linesRead, linesTotal);
 		}
-		
 	}
 
 	private int countLines(String buf) {

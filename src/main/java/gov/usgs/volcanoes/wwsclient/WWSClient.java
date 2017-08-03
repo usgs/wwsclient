@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.AttributeKey;
 
 /**
- * A class that extends the Earthworm Wave Server to include a get helicorder function for WWS.
+ * A class that extends the Earthworm Wave Server to include a get helicorder
+ * function for WWS.
  *
  * @author Dan Cervelli
  * @author Tom Parker
@@ -53,8 +56,10 @@ public class WWSClient {
   /**
    * Constructor.
    * 
-   * @param server remote winston address
-   * @param port remote winston port
+   * @param server
+   *            remote winston address
+   * @param port
+   *            remote winston port
    */
   public WWSClient(final String server, final int port) {
     this.server = server;
@@ -64,8 +69,10 @@ public class WWSClient {
   /**
    * Send a request to Winston and block until the response has been processed.
    * 
-   * @param req Request string
-   * @param handler Object to handle server response
+   * @param req
+   *            Request string
+   * @param handler
+   *            Object to handle server response
    */
   private void sendRequest(String req, AbstractCommandHandler handler) {
     EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -98,10 +105,10 @@ public class WWSClient {
       Thread.currentThread().interrupt();
       throw new RuntimeException(ex);
     } finally {
-      workerGroup.shutdownGracefully();
+      // My work is done, no reason to linger
+      workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
     }
   }
-
 
   /**
    * Return protocol version used by remote winston.
@@ -115,14 +122,17 @@ public class WWSClient {
     return version.version;
   }
 
-
   /**
    * Request RSAM from winston.
    * 
-   * @param scnl channel to request
-   * @param timeSpan time span to request
-   * @param period RSAM period
-   * @param doCompress if true, compress data transmitted over the network
+   * @param scnl
+   *            channel to request
+   * @param timeSpan
+   *            time span to request
+   * @param period
+   *            RSAM period
+   * @param doCompress
+   *            if true, compress data transmitted over the network
    * @return RSAM data
    */
   public RSAMData getRSAMData(final Scnl scnl, final TimeSpan timeSpan, final int period,
@@ -130,8 +140,9 @@ public class WWSClient {
     RSAMData rsam = new RSAMData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s%n",
-        scnl.toString(" "), st, et, period, (doCompress ? "1" : "0"));
+    final String req =
+        String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s%n", scnl.toString(" "), st, et,
+            period, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlRsamRawHandler(rsam, doCompress));
 
     return rsam;
@@ -141,17 +152,26 @@ public class WWSClient {
   /**
    * Fetch a wave data from a Winston.
    * 
-   * @param station station
-   * @param comp component
-   * @param network network
-   * @param location location
-   * @param start start time as J2kSec
-   * @param end end time as J2kSec
-   * @param doCompress if true, request data be compressed before being transmitted over the network
+   * @param station
+   *            station
+   * @param comp
+   *            component
+   * @param network
+   *            network
+   * @param location
+   *            location
+   * @param start
+   *            start time as J2kSec
+   * @param end
+   *            end time as J2kSec
+   * @param doCompress
+   *            if true, request data be compressed before being transmitted over
+   *            the network
    * @return wave data
    */
   public Wave getWave(final String station, final String comp, final String network,
-      final String location, final double start, final double end, final boolean doCompress) {
+      final String location,
+      final double start, final double end, final boolean doCompress) {
 
     Scnl scnl = new Scnl(station, comp, network, location);
     TimeSpan timeSpan = new TimeSpan(J2kSec.asEpoch(start), J2kSec.asEpoch(end));
@@ -162,17 +182,21 @@ public class WWSClient {
   /**
    * Fetch a wave data from a Winston.
    * 
-   * @param scnl channel to query
-   * @param timeSpan time span to query
-   * @param doCompress if true, compress data over the network
+   * @param scnl
+   *            channel to query
+   * @param timeSpan
+   *            time span to query
+   * @param doCompress
+   *            if true, compress data over the network
    * @return wave data, empty if no data is avilable
    */
   public Wave getWave(final Scnl scnl, final TimeSpan timeSpan, final boolean doCompress) {
     Wave wave = new Wave();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s%n", scnl.toString(" "),
-        st, et, (doCompress ? "1" : "0"));
+    final String req =
+        String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s%n", scnl.toString(" "), st, et,
+            (doCompress ? "1" : "0"));
     sendRequest(req, new GetWaveHandler(wave, doCompress));
     wave.setStartTime(st);
     return new Wave(wave);
@@ -181,13 +205,20 @@ public class WWSClient {
   /**
    * Fetch helicorder data from Winston.
    * 
-   * @param station station
-   * @param comp component
-   * @param network network
-   * @param location location
-   * @param start start time as J2kSec
-   * @param end end time as J2kSec
-   * @param doCompress if true, compress data over the network
+   * @param station
+   *            station
+   * @param comp
+   *            component
+   * @param network
+   *            network
+   * @param location
+   *            location
+   * @param start
+   *            start time as J2kSec
+   * @param end
+   *            end time as J2kSec
+   * @param doCompress
+   *            if true, compress data over the network
    * @return heli data
    */
   public HelicorderData getHelicorder(final String station, final String comp, final String network,
@@ -201,9 +232,12 @@ public class WWSClient {
   /**
    * Fetch helicorder data from Winston.
    * 
-   * @param scnl channel to query
-   * @param timeSpan time span to query
-   * @param doCompress if true, compress data before sending
+   * @param scnl
+   *            channel to query
+   * @param timeSpan
+   *            time span to query
+   * @param doCompress
+   *            if true, compress data before sending
    * @return one second max/min values
    */
   public HelicorderData getHelicorder(final Scnl scnl, final TimeSpan timeSpan,
@@ -211,8 +245,9 @@ public class WWSClient {
     HelicorderData heliData = new HelicorderData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s%n",
-        scnl.toString(" "), st, et, (doCompress ? "1" : "0"));
+    final String req =
+        String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s%n", scnl.toString(" "), st, et,
+            (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlHeliRawHandler(heliData, doCompress));
 
     return heliData;
@@ -221,10 +256,14 @@ public class WWSClient {
   /**
    * Retrieve a wave and write to a SAC file.
    * 
-   * @param server Winston address
-   * @param port Winston port
-   * @param timeSpan time span to request
-   * @param scnl SCNL to request
+   * @param server
+   *            Winston address
+   * @param port
+   *            Winston port
+   * @param timeSpan
+   *            time span to request
+   * @param scnl
+   *            SCNL to request
    */
   private static void outputSac(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
@@ -250,10 +289,14 @@ public class WWSClient {
   /**
    * Retrieve a wave and write to STDOUT.
    * 
-   * @param server Winston address
-   * @param port Winston port
-   * @param timeSpan time span to request
-   * @param scnl SCNL to request
+   * @param server
+   *            Winston address
+   * @param port
+   *            Winston port
+   * @param timeSpan
+   *            time span to request
+   * @param scnl
+   *            SCNL to request
    */
   private static void outputText(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
@@ -269,10 +312,14 @@ public class WWSClient {
   /**
    * Retrieve Heli and write to STDOUT.
    * 
-   * @param server Winston address
-   * @param port Winston port
-   * @param timeSpan time span to request
-   * @param scnl SCNL to request
+   * @param server
+   *            Winston address
+   * @param port
+   *            Winston port
+   * @param timeSpan
+   *            time span to request
+   * @param scnl
+   *            SCNL to request
    */
   private static void outputHeli(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
@@ -286,13 +333,18 @@ public class WWSClient {
   /**
    * Retrieve RSAM and write to STDOUT.
    * 
-   * @param server Winston address
-   * @param port Winston port
-   * @param timeSpan time span to request
-   * @param scnl SCNL to request
+   * @param server
+   *            Winston address
+   * @param port
+   *            Winston port
+   * @param timeSpan
+   *            time span to request
+   * @param scnl
+   *            SCNL to request
    */
   private static void outputRsam(final String server, final int port, final TimeSpan timeSpan,
-      final int period, final Scnl scnl) {
+      final int period,
+      final Scnl scnl) {
     System.out.println("dumping RSAM as text\n");
     final WWSClient wws = new WWSClient(server, port);
     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, true);
@@ -312,7 +364,8 @@ public class WWSClient {
   /**
    * Retrieve a list of channels from Winston.
    * 
-   * @param meta if true, request metadata
+   * @param meta
+   *            if true, request metadata
    * @return List of channels
    */
   public List<Channel> getChannels(final boolean meta) {
@@ -326,8 +379,10 @@ public class WWSClient {
   /**
    * Print server menu to STDOUT.
    * 
-   * @param server Winston to query
-   * @param port Winston port
+   * @param server
+   *            Winston to query
+   * @param port
+   *            Winston port
    */
   private static void displayMenu(final String server, final int port) {
     WWSClient wws = new WWSClient(server, port);
@@ -342,10 +397,12 @@ public class WWSClient {
   /**
    * Here's where it all begins
    * 
-   * @param args command line args
+   * @param args
+   *            command line args
+   * @throws InterruptedException 
    * @see gov.usgs.volcanoes.wwsclient.WWSClientArgs
    */
-  public static void main(final String[] args) {
+  public static void main(final String[] args) throws InterruptedException {
     try {
       final WWSClientArgs config = new WWSClientArgs(args);
 
@@ -379,9 +436,10 @@ public class WWSClient {
       }
 
     } catch (Exception e) {
-      LOGGER.error(e.getLocalizedMessage());
+      throw new RuntimeException(e);
+      // LOGGER.error(e.getLocalizedMessage());
     }
-
+    LOGGER.debug("Done");
   }
 
 }

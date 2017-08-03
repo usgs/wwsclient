@@ -1,4 +1,4 @@
-package gov.usgs.volcanoes.winston.client;
+package gov.usgs.volcanoes.wwsclient;
 
 @SuppressWarnings("javadoc")
 public final class Version {

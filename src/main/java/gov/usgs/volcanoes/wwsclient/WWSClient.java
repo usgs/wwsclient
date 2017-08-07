@@ -335,7 +335,7 @@ public class WWSClient {
   private static void displayMenu(final String server, final int port) {
     WWSClient wws = new WWSClient(server, port);
     List<Channel> channels = wws.getChannels();
-    System.out.println("GOT channels: " + channels.size());
+    System.out.println("Channel count: " + channels.size());
     for (Channel chan : channels) {
       System.out.println(chan.toMetadataString());
     }

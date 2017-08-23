@@ -177,7 +177,7 @@ public class WWSClient {
         st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetWaveHandler(wave, doCompress));
     wave.setStartTime(st);
-    return new Wave(wave);
+    return wave;
   }
 
   /**
@@ -238,14 +238,18 @@ public class WWSClient {
     System.out.println("Writing wave to SAC\n");
     final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
-    System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
-    final SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
-    file.putWave(scnl.toString("$"), wave);
-    try {
-      file.write();
-    } catch (final IOException e) {
-      System.err.println("Couldn't write file: " + e.getLocalizedMessage());
-      e.printStackTrace();
+    if (wave != null && wave.buffer != null) {
+      System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
+      final SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
+      file.putWave(scnl.toString("$"), wave);
+      try {
+        file.write();
+      } catch (final IOException e) {
+        System.err.println("Couldn't write file: " + e.getLocalizedMessage());
+        e.printStackTrace();
+      }
+    } else {
+      System.out.println("No data received, not writing SAC file.");
     }
   }
 

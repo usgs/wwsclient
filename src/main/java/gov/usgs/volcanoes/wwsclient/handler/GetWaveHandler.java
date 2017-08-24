@@ -69,7 +69,7 @@ public class GetWaveHandler extends AbstractCommandHandler {
     } else if (length == 0) {
       sem.release();
     } else {
-      LOGGER.debug("Still waiting for bytes. {}/{}", buf.size(), length);
+      LOGGER.debug("Received {} of {} bytes.", buf.size(), length);
     }
 
   }

@@ -50,6 +50,14 @@ import io.netty.util.AttributeKey;
 public class WWSClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
 
+  private static final class WWSInitalizer extends ChannelInitializer<SocketChannel> {
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {
+      ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
+    }
+  }
+
+
   private final String server;
   private final int port;
 
@@ -78,12 +86,7 @@ public class WWSClient {
       b.group(workerGroup);
       b.channel(NioSocketChannel.class);
       b.option(ChannelOption.SO_KEEPALIVE, true);
-      b.handler(new ChannelInitializer<SocketChannel>() {
-        @Override
-        public void initChannel(SocketChannel ch) throws Exception {
-          ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
-        }
-      });
+      b.handler(new WWSInitalizer());
 
       AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
       // Start the client.
@@ -91,8 +94,7 @@ public class WWSClient {
       ch.attr(handlerKey).set(handler);
       System.err.println("Sending: " + req);
 
-      @SuppressWarnings("unused")
-      ChannelFuture lastWriteFuture = ch.writeAndFlush(req);
+      ch.writeAndFlush(req);
 
       // wait until response has been received
       handler.responseWait();
@@ -238,7 +240,7 @@ public class WWSClient {
     System.out.println("Writing wave to SAC\n");
     final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
-    if (wave != null && wave.buffer != null) {
+    if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
       final SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
       file.putWave(scnl.toString("$"), wave);

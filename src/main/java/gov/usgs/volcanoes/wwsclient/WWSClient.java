@@ -39,6 +39,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 
 /**
@@ -49,9 +50,13 @@ import io.netty.util.AttributeKey;
  */
 public class WWSClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
+  private static final int DEFAULT_IDLE_TIMEOUT = 30;
 
   private final String server;
   private final int port;
+  private final int idleTimeout;
+  private io.netty.channel.Channel channel;
+  private EventLoopGroup workerGroup;
 
   /**
    * Constructor.
@@ -60,8 +65,51 @@ public class WWSClient {
    * @param port remote winston port
    */
   public WWSClient(final String server, final int port) {
+    this(server, port, DEFAULT_IDLE_TIMEOUT);
+  }
+
+  /**
+   * Constructor.
+   * 
+   * @param server remote winston server
+   * @param port remote winston port
+   * @param idleTimeout connection idle timeout
+   */
+  public WWSClient(String server, int port, int idleTimeout) {
     this.server = server;
     this.port = port;
+    this.idleTimeout = idleTimeout;
+  }
+
+  private void connect() throws InterruptedException {
+    if (channel != null && channel.isActive()) {
+      return;
+    }
+
+    workerGroup = new NioEventLoopGroup();
+    Bootstrap b = new Bootstrap();
+    b.group(workerGroup);
+    b.channel(NioSocketChannel.class);
+    b.option(ChannelOption.SO_KEEPALIVE, true);
+    b.handler(new ChannelInitializer<SocketChannel>() {
+      @Override
+      public void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 30, idleTimeout));
+        ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
+      }
+    });
+
+    channel = b.connect(server, port).sync().channel();
+  }
+
+  /**
+   * Close connection to winston.
+   */
+  public void close() {
+    if (channel.isActive()) {
+    channel.close();
+    }
+    workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
   }
 
   /**
@@ -71,38 +119,19 @@ public class WWSClient {
    * @param handler Object to handle server response
    */
   private void sendRequest(String req, AbstractCommandHandler handler) {
-    EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     try {
-      Bootstrap b = new Bootstrap();
-      b.group(workerGroup);
-      b.channel(NioSocketChannel.class);
-      b.option(ChannelOption.SO_KEEPALIVE, true);
-      b.handler(new ChannelInitializer<SocketChannel>() {
-        @Override
-        public void initChannel(SocketChannel ch) throws Exception {
-          ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
-        }
-      });
-
+      connect();
+      LOGGER.debug("Sending: " + req);
       AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
-      // Start the client.
-      io.netty.channel.Channel ch = b.connect(server, port).sync().channel();
-      ch.attr(handlerKey).set(handler);
-      System.err.println("Sending: " + req);
-
-      @SuppressWarnings("unused")
-      ChannelFuture lastWriteFuture = ch.writeAndFlush(req);
-
-      // wait until response has been received
+      channel.attr(handlerKey).set(handler);
+      channel.writeAndFlush(req);
       handler.responseWait();
-      ch.close();
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(ex);
     } finally {
-      // My work is done, no reason to linger
-      workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
+      // close()
     }
   }
 
@@ -251,6 +280,7 @@ public class WWSClient {
     } else {
       System.out.println("No data received, not writing SAC file.");
     }
+    wws.close();
   }
 
   /**
@@ -266,7 +296,7 @@ public class WWSClient {
     System.out.println("dumping samples as text\n");
     final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
-
+    wws.close();
     for (final int i : wave.buffer) {
       System.out.println(i);
     }
@@ -285,7 +315,7 @@ public class WWSClient {
     System.out.println("dumping Heli data as text\n");
     final WWSClient wws = new WWSClient(server, port);
     HelicorderData heliData = wws.getHelicorder(scnl, timeSpan, true);
-
+    wws.close();
     System.out.println(heliData.toCSV());
   }
 
@@ -303,7 +333,7 @@ public class WWSClient {
     System.out.println("dumping RSAM as text\n");
     final WWSClient wws = new WWSClient(server, port);
     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, true);
-
+    wws.close();
     System.out.println(rsam.toCSV());
   }
 
@@ -343,6 +373,7 @@ public class WWSClient {
     for (Channel chan : channels) {
       System.out.println(chan.toMetadataString());
     }
+    wws.close();
   }
 
   /**
@@ -355,6 +386,7 @@ public class WWSClient {
   private static void sendCommand(final String server, final int port, final String command) {
     WWSClient wws = new WWSClient(server, port);
     wws.sendRequest(command + "\n", new StdoutHandler(System.out));
+    wws.close();
   }
 
   /**

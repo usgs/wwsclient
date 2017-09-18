@@ -216,7 +216,6 @@ public class WWSClient implements Closeable {
     final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s%n", scnl.toString(" "),
         st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetWaveHandler(wave, doCompress));
-//    wave.setStartTime(st);
     return wave;
   }
 

@@ -83,9 +83,11 @@ public class WWSClient {
 
   private void connect() throws InterruptedException {
     if (channel != null && channel.isActive()) {
+      LOGGER.debug("Channel already active");
       return;
     }
-
+    
+    LOGGER.debug("Connecting");
     workerGroup = new NioEventLoopGroup();
     Bootstrap b = new Bootstrap();
     b.group(workerGroup);
@@ -107,7 +109,7 @@ public class WWSClient {
    */
   public void close() {
     if (channel.isActive()) {
-    channel.close();
+      channel.close();
     }
     workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
   }
@@ -127,6 +129,7 @@ public class WWSClient {
       channel.attr(handlerKey).set(handler);
       channel.writeAndFlush(req);
       handler.responseWait();
+      LOGGER.debug("Completed: " + req);
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(ex);
@@ -142,7 +145,7 @@ public class WWSClient {
    */
   public int getProtocolVersion() {
     VersionHolder version = new VersionHolder();
-    sendRequest("VERSION", new VersionHandler(version));
+    sendRequest("VERSION\n", new VersionHandler(version));
 
     return version.version;
   }

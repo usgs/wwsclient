@@ -31,6 +31,8 @@ public class VersionHandler extends AbstractCommandHandler {
 
 	@Override
 	public void handle(Object msg) throws IOException {
+      LOGGER.debug("Listening for version.");
+
 		ByteBuf msgBuf = (ByteBuf) msg;
 
 		String header = ClientUtils.readResponseHeader(msgBuf);

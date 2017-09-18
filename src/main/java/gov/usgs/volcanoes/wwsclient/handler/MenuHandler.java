@@ -75,6 +75,7 @@ public class MenuHandler extends AbstractCommandHandler {
     }
   }
 
+
   private int countLines(String buf) {
     int lines = 0;
     for (int pos = 0; pos < buf.length(); pos++) {

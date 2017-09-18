@@ -105,6 +105,7 @@ public class WWSClientArgs {
     jsapResult = args.parse(commandLineArgs);
 
     if (!jsapResult.success() && !jsapResult.getBoolean("help")) {
+
       throw new RuntimeException("Try --help");
       }
 

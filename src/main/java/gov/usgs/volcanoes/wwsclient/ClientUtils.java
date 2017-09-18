@@ -27,8 +27,8 @@ public class ClientUtils {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       msgBuf.readBytes(bos, eol - msgBuf.readerIndex());
 
-     // discard newline
-     msgBuf.readByte();
+      // discard newline
+      msgBuf.readByte();
 
       return bos.toString();
     }

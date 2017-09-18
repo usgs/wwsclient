@@ -51,6 +51,14 @@ public class WWSClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
 
+  private static final class WWSInitalizer extends ChannelInitializer<SocketChannel> {
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {
+      ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
+    }
+  }
+
+
   private final String server;
   private final int port;
   private final int idleTimeout;
@@ -127,6 +135,7 @@ public class WWSClient implements Closeable {
       AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
       channel.attr(handlerKey).set(handler);
       channel.writeAndFlush(req);
+
       handler.responseWait();
       LOGGER.debug("Completed: " + req);
     } catch (InterruptedException ex) {

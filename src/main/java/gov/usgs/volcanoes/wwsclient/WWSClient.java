@@ -1,5 +1,6 @@
 package gov.usgs.volcanoes.wwsclient;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,7 @@ import io.netty.util.AttributeKey;
  * @author Dan Cervelli
  * @author Tom Parker
  */
-public class WWSClient {
+public class WWSClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
 

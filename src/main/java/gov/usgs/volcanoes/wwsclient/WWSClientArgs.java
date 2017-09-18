@@ -105,9 +105,8 @@ public class WWSClientArgs {
     jsapResult = args.parse(commandLineArgs);
 
     if (!jsapResult.success() && !jsapResult.getBoolean("help")) {
-      System.out.println("try --help");
-      System.exit(1);
-    }
+      throw new RuntimeException("Try --help");
+      }
 
     verbose = jsapResult.getBoolean("verbose");
     timeSpan = (TimeSpan) jsapResult.getObject("timeSpan");

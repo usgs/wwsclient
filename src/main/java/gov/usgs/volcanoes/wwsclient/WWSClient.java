@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -32,7 +31,6 @@ import gov.usgs.volcanoes.wwsclient.handler.StdoutHandler;
 import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
 import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -271,7 +269,7 @@ public class WWSClient implements Closeable {
     System.out.println("Writing wave to SAC\n");
     final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
-    if (wave != null && wave.buffer != null) {
+    if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
       final SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
       file.putWave(scnl.toString("$"), wave);

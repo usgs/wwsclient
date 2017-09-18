@@ -60,7 +60,6 @@ public class GetWaveHandler extends AbstractCommandHandler {
       byte[] bytes = buf.toByteArray();
 
       if (isCompressed) {
-        System.err.println("decompressing bytes: " + bytes + " : " + bytes.length);
         bytes = Zip.decompress(bytes);
       }
       wave.fromBinary(ByteBuffer.wrap(bytes));

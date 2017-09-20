@@ -93,7 +93,7 @@ public class WWSClient implements Closeable {
       LOGGER.debug("Channel already active");
       return;
     }
-    
+
     LOGGER.debug("Connecting");
     workerGroup = new NioEventLoopGroup();
     Bootstrap b = new Bootstrap();
@@ -199,6 +199,39 @@ public class WWSClient implements Closeable {
     TimeSpan timeSpan = new TimeSpan(J2kSec.asEpoch(start), J2kSec.asEpoch(end));
 
     return getWave(scnl, timeSpan, doCompress);
+  }
+
+  /**
+   * Retrieve a waveform.
+   * 
+   * @deprecated  As of release 1.3, replaced by {@link #getWave()}
+   * @param station station
+   * @param comp component
+   * @param network network
+   * @param start start time as J2kSec
+   * @param end end time as J2kSec
+   * @return requested waveform or null if data is not available
+   */
+  @Deprecated
+  public Wave getRawData(String station, String comp, String network, double start, double end) {
+    return getWave(station, comp, network, "--", start, end, true);
+  }
+
+  /**
+   * Retrieve a waveform.
+   * 
+   * @deprecated  As of release 1.3, replaced by {@link #getWave()}
+   * @param station station
+   * @param comp component
+   * @param network network
+   * @param location location
+   * @param start start time as J2kSec
+   * @param end end time as J2kSec
+   * @return requested waveform or null if data is not available
+   */
+  @Deprecated
+  public Wave getRawData(String station, String comp, String network, String location, double start, double end) {
+    return getWave(station, comp, network, location, start, end, true);
   }
 
   /**

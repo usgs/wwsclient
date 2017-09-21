@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.volcanoes.wwsclient.WWSClient;
+import gov.usgs.volcanoes.wwsclient.WwsClient;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
@@ -18,7 +18,7 @@ import io.netty.util.AttributeKey;
  */
 public class WWSClientHandler extends ChannelInboundHandlerAdapter {
   @SuppressWarnings("unused")
-  private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WwsClient.class);
 
   /** handler key */
   public static final AttributeKey<AbstractCommandHandler> handlerKey =

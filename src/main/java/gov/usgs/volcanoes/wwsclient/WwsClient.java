@@ -47,8 +47,10 @@ import io.netty.util.AttributeKey;
  * @author Dan Cervelli
  * @author Tom Parker
  */
-public class WWSClient implements Closeable {
-  private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+    value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
+public class WwsClient implements Closeable {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WwsClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
 
   private static final class WWSInitalizer extends ChannelInitializer<SocketChannel> {
@@ -71,7 +73,7 @@ public class WWSClient implements Closeable {
    * @param server remote winston address
    * @param port remote winston port
    */
-  public WWSClient(final String server, final int port) {
+  public WwsClient(final String server, final int port) {
     this(server, port, DEFAULT_IDLE_TIMEOUT);
   }
 
@@ -82,7 +84,7 @@ public class WWSClient implements Closeable {
    * @param port remote winston port
    * @param idleTimeout connection idle timeout
    */
-  public WWSClient(String server, int port, int idleTimeout) {
+  public WwsClient(String server, int port, int idleTimeout) {
     this.server = server;
     this.port = port;
     this.idleTimeout = idleTimeout;
@@ -172,7 +174,7 @@ public class WWSClient implements Closeable {
     RSAMData rsam = new RSAMData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s%n",
+    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s\n",
         scnl.toString(" "), st, et, period, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlRsamRawHandler(rsam, doCompress));
 
@@ -213,7 +215,7 @@ public class WWSClient implements Closeable {
     Wave wave = new Wave();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s%n", scnl.toString(" "),
+    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s\n", scnl.toString(" "),
         st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetWaveHandler(wave, doCompress));
     return wave;
@@ -252,7 +254,7 @@ public class WWSClient implements Closeable {
     HelicorderData heliData = new HelicorderData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s%n",
+    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s\n",
         scnl.toString(" "), st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlHeliRawHandler(heliData, doCompress));
 
@@ -275,7 +277,7 @@ public class WWSClient implements Closeable {
 
     String filename = scnl.toString("_") + "_" + date + ".sac";
     System.out.println("Writing wave to SAC\n");
-    final WWSClient wws = new WWSClient(server, port);
+    final WwsClient wws = new WwsClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
@@ -304,7 +306,7 @@ public class WWSClient implements Closeable {
   private static void outputText(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     System.out.println("dumping samples as text\n");
-    final WWSClient wws = new WWSClient(server, port);
+    final WwsClient wws = new WwsClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     wws.close();
     for (final int i : wave.buffer) {
@@ -323,7 +325,7 @@ public class WWSClient implements Closeable {
   private static void outputHeli(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     System.out.println("dumping Heli data as text\n");
-    final WWSClient wws = new WWSClient(server, port);
+    final WwsClient wws = new WwsClient(server, port);
     HelicorderData heliData = wws.getHelicorder(scnl, timeSpan, true);
     wws.close();
     System.out.println(heliData.toCSV());
@@ -341,7 +343,7 @@ public class WWSClient implements Closeable {
   private static void outputRsam(final String server, final int port, final TimeSpan timeSpan,
       final int period, final Scnl scnl) {
     System.out.println("dumping RSAM as text\n");
-    final WWSClient wws = new WWSClient(server, port);
+    final WwsClient wws = new WwsClient(server, port);
     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, true);
     wws.close();
     System.out.println(rsam.toCSV());
@@ -364,7 +366,7 @@ public class WWSClient implements Closeable {
    */
   public List<Channel> getChannels(final boolean meta) {
     List<Channel> channels = new ArrayList<Channel>();
-    String req = String.format("GETCHANNELS: GC%s%n", meta ? " METADATA" : "");
+    String req = String.format("GETCHANNELS: GC%s\n", meta ? " METADATA" : "");
 
     sendRequest(req, new MenuHandler(channels));
     return channels;
@@ -377,7 +379,7 @@ public class WWSClient implements Closeable {
    * @param port Winston port
    */
   private static void displayMenu(final String server, final int port) {
-    WWSClient wws = new WWSClient(server, port);
+    WwsClient wws = new WwsClient(server, port);
     List<Channel> channels = wws.getChannels();
     System.out.println("Channel count: " + channels.size());
     for (Channel chan : channels) {
@@ -394,7 +396,7 @@ public class WWSClient implements Closeable {
    * @param command Command String to send
    */
   private static void sendCommand(final String server, final int port, final String command) {
-    WWSClient wws = new WWSClient(server, port);
+    WwsClient wws = new WwsClient(server, port);
     wws.sendRequest(command + "\n", new StdoutHandler(System.out));
     wws.close();
   }
@@ -403,11 +405,11 @@ public class WWSClient implements Closeable {
    * Here's where it all begins
    * 
    * @param args command line args
-   * @see gov.usgs.volcanoes.wwsclient.WWSClientArgs
+   * @see gov.usgs.volcanoes.wwsclient.WwsClientArgs
    */
   public static void main(final String[] args) {
     try {
-      final WWSClientArgs config = new WWSClientArgs(args);
+      final WwsClientArgs config = new WwsClientArgs(args);
 
       if (config.menu) {
         LOGGER.debug("Requesting menu from {}:{}.", config.server, config.port);

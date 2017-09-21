@@ -27,8 +27,8 @@ import gov.usgs.volcanoes.core.time.TimeSpan;
  *
  * @author Tom Parker
  */
-public class WWSClientArgs {
-  private static final Logger LOGGER = LoggerFactory.getLogger(WWSClientArgs.class);
+public class WwsClientArgs {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WwsClientArgs.class);
 
   /** format of time on cmd line */
   public static final String INPUT_TIME_FORMAT = "yyyyMMddHHmm";
@@ -94,7 +94,7 @@ public class WWSClientArgs {
    * @param commandLineArgs the command line arguments
    * @throws Exception when things go wrong
    */
-  public WWSClientArgs(final String[] commandLineArgs) throws Exception {
+  public WwsClientArgs(final String[] commandLineArgs) throws Exception {
     Arguments args = null;
     args = new Args(PROGRAM_NAME, EXPLANATION, PARAMETERS);
     args = new ScnlArg(false, args);

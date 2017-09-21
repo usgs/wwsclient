@@ -29,8 +29,7 @@ public class ClientUtils {
 
       // discard newline
       msgBuf.readByte();
-
-      return bos.toString();
+      return bos.toString("US-ASCII");
     }
   }
 }

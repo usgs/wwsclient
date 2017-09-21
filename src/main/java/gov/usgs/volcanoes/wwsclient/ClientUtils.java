@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class ClientUtils {
+public abstract class ClientUtils {
   /**
    * Read a single line from a ByteBuf. If the buffer does not contain a full line, no change to the
    * buffer is made.

@@ -63,14 +63,15 @@ public class GetWaveHandler extends AbstractCommandHandler {
         bytes = Zip.decompress(bytes);
       }
       wave.fromBinary(ByteBuffer.wrap(bytes));
-
+      
       sem.release();
+      msgBuf.release();
     } else if (length == 0) {
       sem.release();
+      msgBuf.release();
     } else {
       LOGGER.debug("Received {} of {} bytes.", buf.size(), length);
     }
-
   }
 
 }

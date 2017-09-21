@@ -70,6 +70,7 @@ public class MenuHandler extends AbstractCommandHandler {
         }
       }
       sem.release();
+      msgBuf.release();
     } else {
       LOGGER.debug("Read {} of {} channels", linesRead, linesTotal);
     }

@@ -15,34 +15,35 @@ import io.netty.buffer.ByteBuf;
  * @author Tom Parker
  */
 public class VersionHandler extends AbstractCommandHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(VersionHandler.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(VersionHandler.class);
 
-	private final VersionHolder version;
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param version object to hold the version number
-	 */
-	public VersionHandler(VersionHolder version) {
-		super();
-		this.version = version;
-	}
+  private final VersionHolder version;
 
-	@Override
-	public void handle(Object msg) throws IOException {
-      LOGGER.debug("Listening for version.");
+  /**
+   * Constructor.
+   * 
+   * @param version object to hold the version number
+   */
+  public VersionHandler(VersionHolder version) {
+    super();
+    this.version = version;
+  }
 
-		ByteBuf msgBuf = (ByteBuf) msg;
+  @Override
+  public void handle(Object msg) throws IOException {
+    LOGGER.debug("Listening for version.");
 
-		String header = ClientUtils.readResponseHeader(msgBuf);
-		if (header == null) {
-			LOGGER.debug("Still waiting for full response line.");
-			return;
-		} else {
-			version.version = Integer.parseInt(header.split(" ")[1]);
-			sem.release();
-		}
-	}
+    ByteBuf msgBuf = (ByteBuf) msg;
+
+    String header = ClientUtils.readResponseHeader(msgBuf);
+    if (header == null) {
+      LOGGER.debug("Still waiting for full response line.");
+      return;
+    } else {
+      version.version = Integer.parseInt(header.split(" ")[1]);
+      sem.release();
+      msgBuf.release();
+    }
+  }
 
 }

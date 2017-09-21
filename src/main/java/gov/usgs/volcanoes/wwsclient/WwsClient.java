@@ -47,6 +47,8 @@ import io.netty.util.AttributeKey;
  * @author Dan Cervelli
  * @author Tom Parker
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+    value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
 public class WwsClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WwsClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
@@ -172,7 +174,7 @@ public class WwsClient implements Closeable {
     RSAMData rsam = new RSAMData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s%n",
+    final String req = String.format(Locale.US, "GETSCNLRSAMRAW: GS %s %f %f %d %s\n",
         scnl.toString(" "), st, et, period, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlRsamRawHandler(rsam, doCompress));
 
@@ -246,7 +248,7 @@ public class WwsClient implements Closeable {
     Wave wave = new Wave();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s%n", scnl.toString(" "),
+    final String req = String.format(Locale.US, "GETWAVERAW: GS %s %f %f %s\n", scnl.toString(" "),
         st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetWaveHandler(wave, doCompress));
     return wave;
@@ -285,7 +287,7 @@ public class WwsClient implements Closeable {
     HelicorderData heliData = new HelicorderData();
     double st = J2kSec.fromEpoch(timeSpan.startTime);
     double et = J2kSec.fromEpoch(timeSpan.endTime);
-    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s%n",
+    final String req = String.format(Locale.US, "GETSCNLHELIRAW: GS %s %f %f %s\n",
         scnl.toString(" "), st, et, (doCompress ? "1" : "0"));
     sendRequest(req, new GetScnlHeliRawHandler(heliData, doCompress));
 
@@ -397,7 +399,7 @@ public class WwsClient implements Closeable {
    */
   public List<Channel> getChannels(final boolean meta) {
     List<Channel> channels = new ArrayList<Channel>();
-    String req = String.format("GETCHANNELS: GC%s%n", meta ? " METADATA" : "");
+    String req = String.format("GETCHANNELS: GC%s\n", meta ? " METADATA" : "");
 
     sendRequest(req, new MenuHandler(channels));
     return channels;

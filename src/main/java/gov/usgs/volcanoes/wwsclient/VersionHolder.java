@@ -7,6 +7,8 @@ package gov.usgs.volcanoes.wwsclient;
  *
  */
 public class VersionHolder {
-  /** winston protocol version  */
-	public int version = -1;
+  /** winston protocol version */
+  @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+      value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "Read elsewhere")
+  public int version = -1;
 }

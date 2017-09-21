@@ -66,6 +66,7 @@ public class GetScnlHeliRawHandler extends AbstractCommandHandler {
         heliData.fromBinary(ByteBuffer.wrap(bytes));
       }
       sem.release();
+      msgBuf.release();
     } else {
       LOGGER.debug("Received {} of {} bytes.", buf.size(), length);
     }

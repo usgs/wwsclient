@@ -117,7 +117,7 @@ public class WwsClient implements Closeable {
    * Close connection to winston.
    */
   public void close() {
-    if (channel.isActive()) {
+    if (channel != null && channel.isActive()) {
       channel.close();
     }
     workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
@@ -142,9 +142,8 @@ public class WwsClient implements Closeable {
       LOGGER.debug("Completed: " + req);
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
-      throw new RuntimeException(ex);
     } finally {
-      // close()
+       close();
     }
   }
 

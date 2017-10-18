@@ -39,8 +39,7 @@ public class GetWaveHandler extends AbstractCommandHandler {
   }
 
   @Override
-  public void handle(Object msg) throws IOException {
-    ByteBuf msgBuf = (ByteBuf) msg;
+  public void handle(ByteBuf msgBuf) throws IOException {
     if (length < 0) {
       String header = ClientUtils.readResponseHeader(msgBuf);
       if (header == null) {

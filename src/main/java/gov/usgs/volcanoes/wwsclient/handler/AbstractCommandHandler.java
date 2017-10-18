@@ -3,6 +3,8 @@ package gov.usgs.volcanoes.wwsclient.handler;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
+import io.netty.buffer.ByteBuf;
+
 /**
  * Receive and process response from winston.
  *
@@ -28,7 +30,7 @@ public abstract class AbstractCommandHandler {
    * @param msg received message
    * @throws IOException when things go wrong
    */
-  public abstract void handle(Object msg) throws IOException;
+  public abstract void handle(ByteBuf msgBuf) throws IOException;
 
   /**
    * Block until the handler has received and processed server response.

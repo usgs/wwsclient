@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gov.usgs.volcanoes.wwsclient.WwsClient;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
@@ -27,7 +28,11 @@ public class WWSClientHandler extends ChannelInboundHandlerAdapter {
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
     AbstractCommandHandler handler = ctx.channel().attr(handlerKey).get();
-    handler.handle(msg);
+    if (msg instanceof ByteBuf) {
+      handler.handle((ByteBuf) msg);      
+    } else {
+      LOGGER.error("Unknown message from network. ({})", msg.getClass().getName());
+    }
   }
 
   @Override

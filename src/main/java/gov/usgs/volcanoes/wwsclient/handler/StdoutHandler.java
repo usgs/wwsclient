@@ -33,8 +33,7 @@ public class StdoutHandler extends AbstractCommandHandler {
   }
 
   @Override
-  public void handle(Object msg) throws IOException {
-    ByteBuf msgBuf = (ByteBuf) msg;
+  public void handle(ByteBuf msgBuf) throws IOException {
     LOGGER.info("Received {} bytes.", msgBuf.readableBytes());
     out.append(msgBuf.toString(Charset.forName("US-ASCII")));
   }

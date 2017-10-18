@@ -45,8 +45,7 @@ public class MenuHandler extends AbstractCommandHandler {
   }
 
   @Override
-  public void handle(Object msg) throws IOException {
-    ByteBuf msgBuf = (ByteBuf) msg;
+  public void handle(ByteBuf msgBuf) throws IOException {
     if (linesTotal < 0) {
       String header = ClientUtils.readResponseHeader(msgBuf);
       if (header == null) {

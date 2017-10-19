@@ -39,8 +39,7 @@ public class GetScnlHeliRawHandler extends AbstractCommandHandler {
   }
 
   @Override
-  public void handle(Object msg) throws IOException {
-    ByteBuf msgBuf = (ByteBuf) msg;
+  public void handle(ByteBuf msgBuf) throws IOException {
     if (length < 0) {
       String header = ClientUtils.readResponseHeader(msgBuf);
       if (header == null) {
@@ -66,7 +65,6 @@ public class GetScnlHeliRawHandler extends AbstractCommandHandler {
         heliData.fromBinary(ByteBuffer.wrap(bytes));
       }
       sem.release();
-      msgBuf.release();
     } else {
       LOGGER.debug("Received {} of {} bytes.", buf.size(), length);
     }

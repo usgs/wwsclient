@@ -39,8 +39,7 @@ public class GetScnlRsamRawHandler extends AbstractCommandHandler {
   }
 
   @Override
-  public void handle(Object msg) throws IOException {
-    ByteBuf msgBuf = (ByteBuf) msg;
+  public void handle(ByteBuf msgBuf) throws IOException {
     if (length < 0) {
       String header = ClientUtils.readResponseHeader(msgBuf);
       if (header == null) {
@@ -64,7 +63,6 @@ public class GetScnlRsamRawHandler extends AbstractCommandHandler {
       }
       rsam.fromBinary(ByteBuffer.wrap(bytes));
       sem.release();
-      msgBuf.release();
     } else {
       LOGGER.debug("Still waiting for bytes. {}/{}", buf.size(), length);
     }

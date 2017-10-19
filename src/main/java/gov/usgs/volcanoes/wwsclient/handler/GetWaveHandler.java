@@ -64,10 +64,8 @@ public class GetWaveHandler extends AbstractCommandHandler {
       wave.fromBinary(ByteBuffer.wrap(bytes));
       
       sem.release();
-      msgBuf.release();
     } else if (length == 0) {
       sem.release();
-      msgBuf.release();
     } else {
       LOGGER.debug("Received {} of {} bytes.", buf.size(), length);
     }

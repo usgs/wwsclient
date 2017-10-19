@@ -16,14 +16,15 @@ import gov.usgs.volcanoes.core.util.UtilException;
 import gov.usgs.volcanoes.winston.Channel;
 import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 
 /**
  * Receive and process response from a winston GETMENU request.
  *
  * @author Tom Parker
  */
-public class MenuHandler extends AbstractCommandHandler {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MenuHandler.class);
+public class GetChannelsHandler extends AbstractCommandHandler {
+  private static final Logger LOGGER = LoggerFactory.getLogger(GetChannelsHandler.class);
   private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   private int linesTotal;
@@ -36,7 +37,7 @@ public class MenuHandler extends AbstractCommandHandler {
    * 
    * @param channels List to be populated with channels
    */
-  public MenuHandler(List<gov.usgs.volcanoes.winston.Channel> channels) {
+  public GetChannelsHandler(List<gov.usgs.volcanoes.winston.Channel> channels) {
     super();
     linesTotal = -Integer.MAX_VALUE;
     linesRead = 0;
@@ -57,7 +58,9 @@ public class MenuHandler extends AbstractCommandHandler {
       }
     }
 
-    String chunk = msgBuf.toString(Charset.forName("US-ASCII"));
+    byte[] bytes = new byte[msgBuf.readableBytes()];
+    msgBuf.readBytes(bytes);
+    String chunk = new String(bytes);
     linesRead += countLines(chunk);
     menu.append(chunk);
     if (linesRead == linesTotal) {
@@ -69,7 +72,6 @@ public class MenuHandler extends AbstractCommandHandler {
         }
       }
       sem.release();
-      msgBuf.release();
     } else {
       LOGGER.debug("Read {} of {} channels", linesRead, linesTotal);
     }

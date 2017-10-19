@@ -26,7 +26,7 @@ import gov.usgs.volcanoes.wwsclient.handler.AbstractCommandHandler;
 import gov.usgs.volcanoes.wwsclient.handler.GetScnlHeliRawHandler;
 import gov.usgs.volcanoes.wwsclient.handler.GetScnlRsamRawHandler;
 import gov.usgs.volcanoes.wwsclient.handler.GetWaveHandler;
-import gov.usgs.volcanoes.wwsclient.handler.MenuHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetChannelsHandler;
 import gov.usgs.volcanoes.wwsclient.handler.StdoutHandler;
 import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
 import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
@@ -90,6 +90,7 @@ public class WwsClient implements Closeable {
     this.idleTimeout = idleTimeout;
   }
 
+
   private void connect() throws InterruptedException {
     if (channel != null && channel.isActive()) {
       LOGGER.debug("Channel already active");
@@ -117,8 +118,13 @@ public class WwsClient implements Closeable {
    * Close connection to winston.
    */
   public void close() {
+    LOGGER.debug("Closing channel.");
     if (channel != null && channel.isActive()) {
-      channel.close();
+      try {
+        channel.close().sync();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
     }
     workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
   }
@@ -136,14 +142,16 @@ public class WwsClient implements Closeable {
       LOGGER.debug("Sending: " + req);
       AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
       channel.attr(handlerKey).set(handler);
-      channel.writeAndFlush(req);
+      channel.writeAndFlush(req).sync();
+      LOGGER.debug("Sent: " + req);
+      
 
       handler.responseWait();
       LOGGER.debug("Completed: " + req);
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
     } finally {
-       close();
+      close();
     }
   }
 
@@ -231,7 +239,8 @@ public class WwsClient implements Closeable {
    * @return requested waveform or null if data is not available
    */
   @Deprecated
-  public Wave getRawData(String station, String comp, String network, String location, double start, double end) {
+  public Wave getRawData(String station, String comp, String network, String location, double start,
+      double end) {
     return getWave(station, comp, network, location, start, end, true);
   }
 
@@ -400,7 +409,7 @@ public class WwsClient implements Closeable {
     List<Channel> channels = new ArrayList<Channel>();
     String req = String.format("GETCHANNELS: GC%s\n", meta ? " METADATA" : "");
 
-    sendRequest(req, new MenuHandler(channels));
+    sendRequest(req, new GetChannelsHandler(channels));
     return channels;
   }
 

@@ -63,7 +63,6 @@ public class GetScnlRsamRawHandler extends AbstractCommandHandler {
       }
       rsam.fromBinary(ByteBuffer.wrap(bytes));
       sem.release();
-      msgBuf.release();
     } else {
       LOGGER.debug("Still waiting for bytes. {}/{}", buf.size(), length);
     }

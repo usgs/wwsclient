@@ -31,6 +31,7 @@ public class VersionHandler extends AbstractCommandHandler {
 
   @Override
   public void handle(ByteBuf msgBuf) throws IOException {
+ 
     LOGGER.debug("Listening for version.");
 
     String header = ClientUtils.readResponseHeader(msgBuf);
@@ -40,7 +41,6 @@ public class VersionHandler extends AbstractCommandHandler {
     } else {
       version.version = Integer.parseInt(header.split(" ")[1]);
       sem.release();
-      msgBuf.release();
     }
   }
 

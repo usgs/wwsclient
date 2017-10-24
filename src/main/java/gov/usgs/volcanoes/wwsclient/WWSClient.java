@@ -50,8 +50,8 @@ import io.netty.util.AttributeKey;
  */
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
     value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
-public class WwsClient implements Closeable {
-  private static final Logger LOGGER = LoggerFactory.getLogger(WwsClient.class);
+public class WWSClient implements Closeable {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
 
   private final String server;
@@ -66,7 +66,7 @@ public class WwsClient implements Closeable {
    * @param server remote winston address
    * @param port remote winston port
    */
-  public WwsClient(final String server, final int port) {
+  public WWSClient(final String server, final int port) {
     this(server, port, DEFAULT_IDLE_TIMEOUT);
   }
 
@@ -77,7 +77,7 @@ public class WwsClient implements Closeable {
    * @param port remote winston port
    * @param idleTimeout connection idle timeout
    */
-  public WwsClient(String server, int port, int idleTimeout) {
+  public WWSClient(String server, int port, int idleTimeout) {
     this.server = server;
     this.port = port;
     this.idleTimeout = idleTimeout;
@@ -311,7 +311,7 @@ public class WwsClient implements Closeable {
 
     String filename = scnl.toString("_") + "_" + date + ".sac";
     System.out.println("Writing wave to SAC\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
@@ -340,7 +340,7 @@ public class WwsClient implements Closeable {
   private static void outputText(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     System.out.println("dumping samples as text\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     wws.close();
     for (final int i : wave.buffer) {
@@ -359,7 +359,7 @@ public class WwsClient implements Closeable {
   private static void outputHeli(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     System.out.println("dumping Heli data as text\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     HelicorderData heliData = wws.getHelicorder(scnl, timeSpan, true);
     wws.close();
     System.out.println(heliData.toCSV());
@@ -377,7 +377,7 @@ public class WwsClient implements Closeable {
   private static void outputRsam(final String server, final int port, final TimeSpan timeSpan,
       final int period, final Scnl scnl) {
     System.out.println("dumping RSAM as text\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, true);
     wws.close();
     System.out.println(rsam.toCSV());
@@ -413,7 +413,7 @@ public class WwsClient implements Closeable {
    * @param port Winston port
    */
   private static void displayMenu(final String server, final int port) {
-    WwsClient wws = new WwsClient(server, port);
+    WWSClient wws = new WWSClient(server, port);
     List<Channel> channels = wws.getChannels();
     System.out.println("Channel count: " + channels.size());
     for (Channel chan : channels) {
@@ -430,7 +430,7 @@ public class WwsClient implements Closeable {
    * @param command Command String to send
    */
   private static void sendCommand(final String server, final int port, final String command) {
-    WwsClient wws = new WwsClient(server, port);
+    WWSClient wws = new WWSClient(server, port);
     wws.sendRequest(command + "\n", new StdoutHandler(System.out));
     wws.close();
   }

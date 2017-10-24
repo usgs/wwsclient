@@ -18,6 +18,7 @@ import gov.usgs.plot.data.RSAMData;
 import gov.usgs.plot.data.Wave;
 import gov.usgs.plot.data.file.FileType;
 import gov.usgs.plot.data.file.SeismicDataFile;
+import gov.usgs.volcanoes.core.args.ArgumentException;
 import gov.usgs.volcanoes.core.data.Scnl;
 import gov.usgs.volcanoes.core.time.J2kSec;
 import gov.usgs.volcanoes.core.time.TimeSpan;
@@ -52,14 +53,6 @@ import io.netty.util.AttributeKey;
 public class WwsClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WwsClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
-
-  private static final class WWSInitalizer extends ChannelInitializer<SocketChannel> {
-    @Override
-    public void initChannel(SocketChannel ch) throws Exception {
-      ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
-    }
-  }
-
 
   private final String server;
   private final int port;
@@ -486,10 +479,10 @@ public class WwsClient implements Closeable {
         sendCommand(config.server, config.port, config.command);
       }
 
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    } catch (ArgumentException e) {
+      System.out.println(e.getLocalizedMessage());
     }
-    LOGGER.debug("Done");
+    LOGGER.debug("Exiting.");
   }
 
 }

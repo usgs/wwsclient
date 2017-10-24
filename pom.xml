@@ -4,7 +4,7 @@
 
 	<groupId>gov.usgs.volcanoes</groupId>
 	<artifactId>wwsclient</artifactId>
-	<version>1.3.0</version>
+	<version>1.3.1</version>
 	<packaging>jar</packaging>
 
 	<name>wwsclient</name>
@@ -226,7 +226,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>gov.usgs.volcanoes.wwsclient.WWSClient</mainClass>
+							<mainClass>gov.usgs.volcanoes.wwsclient.WwsClient</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

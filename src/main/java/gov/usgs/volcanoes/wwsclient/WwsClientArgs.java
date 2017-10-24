@@ -137,10 +137,10 @@ public class WwsClientArgs {
 
     if (sacOutput || txtOutput || rsamOutput || heliOutput) {
       if (channel == null) {
-        throw new RuntimeException("No channel provided.");
+        throw new ArgumentException("No channel provided.");
       }
       if (timeSpan == null) {
-        throw new RuntimeException("No time span provided.");
+        throw new ArgumentException("No time span provided.");
       }
     }
 

@@ -15,9 +15,11 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/VersionHolder.html">VersionHolder</a> {
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>    <em class="jxr_javadoccomment">/** winston protocol version  */</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> version = -1;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  }
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>    <em class="jxr_javadoccomment">/** winston protocol version */</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>        value = <span class="jxr_string">"URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"</span>, justification = <span class="jxr_string">"Read elsewhere"</span>)
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> version = -1;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017. All rights reserved.</div>

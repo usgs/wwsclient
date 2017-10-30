@@ -99,7 +99,7 @@ public class WWSClient implements Closeable {
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       public void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 30, idleTimeout));
+        ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(0, 0, idleTimeout));
         ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
       }
     });

@@ -96,7 +96,6 @@ public class WWSClient implements Closeable {
     b.group(workerGroup);
     b.channel(NioSocketChannel.class);
     b.option(ChannelOption.SO_KEEPALIVE, true);
-    LOGGER.debug("TOMP SAYS TIMEOUT = " + idleTimeout);
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       public void initChannel(SocketChannel ch) throws Exception {

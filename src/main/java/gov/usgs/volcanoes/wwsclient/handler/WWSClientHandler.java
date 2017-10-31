@@ -9,6 +9,7 @@ import gov.usgs.volcanoes.wwsclient.WWSClient;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 
@@ -31,9 +32,13 @@ public class WWSClientHandler extends ChannelInboundHandlerAdapter {
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
     try {
-      buf.writeBytes((ByteBuf) msg);
-      AbstractCommandHandler handler = ctx.channel().attr(handlerKey).get();
-      handler.handle(buf);
+      if (buf == null) {
+        LOGGER.error("Uninitalized buffer in WWSClientHandler");
+      } else {
+        buf.writeBytes((ByteBuf) msg);
+        AbstractCommandHandler handler = ctx.channel().attr(handlerKey).get();
+        handler.handle(buf);
+      }
     } finally {
       ReferenceCountUtil.release(msg);
     }
@@ -41,8 +46,21 @@ public class WWSClientHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    LOGGER.debug("Exception caught in WWSClientHandler");
     cause.printStackTrace();
     ctx.close();
+  }
+
+  @Override
+  public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    if (evt instanceof IdleStateEvent) {
+      AbstractCommandHandler handler = ctx.channel().attr(handlerKey).get();
+      handler.timeOutReceived();
+      LOGGER.debug("TOMP SAYS TIMEOUT. What now?");
+    } else {
+      LOGGER.debug("TOMP SAYS unknown event: {}", evt);
+      
+    }
   }
 
   public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -50,7 +68,8 @@ public class WWSClientHandler extends ChannelInboundHandlerAdapter {
   }
 
   public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-    buf.release();
-    LOGGER.debug("TOMP SAYS CHANNEL UNREGISTERED");
+    if (buf != null) {
+      buf.release();
+    }
   }
 }

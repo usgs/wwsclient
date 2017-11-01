@@ -36,6 +36,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ConnectTimeoutException;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -88,7 +89,7 @@ public class WWSClient implements Closeable {
 
   private boolean connect() throws InterruptedException {
     if (channel != null && channel.isActive()) {
-      LOGGER.debug("Channel already active");
+      LOGGER.debug("Reusing connection");
       return true;
     }
 
@@ -118,9 +119,17 @@ public class WWSClient implements Closeable {
     f.awaitUninterruptibly();
 
     if (f.isCancelled()) {
+      LOGGER.error("Connection attempt to {}:{} canceled in WWSClient.", server, port);
       return false;
     } else if (!f.isSuccess()) {
-      f.cause().printStackTrace();
+      Throwable cause = f.cause();
+      if (cause instanceof ConnectTimeoutException) {
+        LOGGER.error("Timeout connecting to {}:{} in WWSClient.", server, port);
+      } else {
+        LOGGER.error("Error connecting to {}:{} in WWSClient. ({})", server, port,
+            cause.getClass().getName());
+        // f.cause().printStackTrace();
+      }
       return false;
     } else {
       channel = f.channel();
@@ -159,17 +168,21 @@ public class WWSClient implements Closeable {
         channel.writeAndFlush(req).sync();
         LOGGER.debug("Sent: " + req);
 
-
         handler.responseWait();
         LOGGER.debug("Completed: " + req);
-      } else {
-        LOGGER.error("Cannot connect to {}:{}", server, port);
       }
-    } catch (InterruptedException ex) {
+    } catch (
+
+    InterruptedException ex)
+
+    {
       Thread.currentThread().interrupt();
-    } finally {
+    } finally
+
+    {
       close();
     }
+
   }
 
   /**

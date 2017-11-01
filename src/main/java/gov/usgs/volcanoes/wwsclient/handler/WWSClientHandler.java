@@ -20,7 +20,6 @@ import io.netty.util.ReferenceCountUtil;
  *
  */
 public class WWSClientHandler extends ChannelInboundHandlerAdapter {
-  @SuppressWarnings("unused")
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
 
   /** handler key */
@@ -56,9 +55,9 @@ public class WWSClientHandler extends ChannelInboundHandlerAdapter {
     if (evt instanceof IdleStateEvent) {
       AbstractCommandHandler handler = ctx.channel().attr(handlerKey).get();
       handler.timeOutReceived();
-      LOGGER.debug("TOMP SAYS TIMEOUT. What now?");
+      LOGGER.debug("Idle timeout in WWSClientHandler");
     } else {
-      LOGGER.debug("TOMP SAYS unknown event: {}", evt);
+      LOGGER.debug("Unknown event in WWSClientHandler: {}", evt);
       
     }
   }

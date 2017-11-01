@@ -41,5 +41,12 @@ public abstract class AbstractCommandHandler {
   public void responseWait() throws InterruptedException {
     sem.acquire();
   }
+  
+  /**
+   * Receive timeout events
+   */
+  public void timeOutReceived() {
+    sem.release();
+  }
 
 }

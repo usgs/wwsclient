@@ -32,8 +32,11 @@ import gov.usgs.volcanoes.wwsclient.handler.StdoutHandler;
 import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
 import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ConnectTimeoutException;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -84,10 +87,10 @@ public class WWSClient implements Closeable {
   }
 
 
-  private void connect() throws InterruptedException {
+  private boolean connect() throws InterruptedException {
     if (channel != null && channel.isActive()) {
-      LOGGER.debug("Channel already active");
-      return;
+      LOGGER.debug("Reusing connection");
+      return true;
     }
 
     LOGGER.debug("Connecting");
@@ -99,20 +102,47 @@ public class WWSClient implements Closeable {
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       public void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 30, idleTimeout));
+        ch.pipeline().addLast("idleStateHandler",
+            new IdleStateHandler(0, 0, idleTimeout, TimeUnit.MILLISECONDS));
         ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
+      }
+
+      @Override
+      public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        LOGGER.debug("Exception caught in ChannelInitalizer");
+        cause.printStackTrace();
       }
     });
 
-    channel = b.connect(server, port).sync().channel();
+    b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, idleTimeout);
+    ChannelFuture f = b.connect(server, port);
+    f.awaitUninterruptibly();
+
+    if (f.isCancelled()) {
+      LOGGER.error("Connection attempt to {}:{} canceled in WWSClient.", server, port);
+      return false;
+    } else if (!f.isSuccess()) {
+      Throwable cause = f.cause();
+      if (cause instanceof ConnectTimeoutException) {
+        LOGGER.error("Timeout connecting to {}:{} in WWSClient.", server, port);
+      } else {
+        LOGGER.error("Error connecting to {}:{} in WWSClient. ({})", server, port,
+            cause.getClass().getName());
+        // f.cause().printStackTrace();
+      }
+      return false;
+    } else {
+      channel = f.channel();
+      return true;
+    }
   }
 
   /**
    * Close connection to winston.
    */
   public void close() {
-    LOGGER.debug("Closing channel.");
     if (channel != null && channel.isActive()) {
+      LOGGER.debug("Closing channel.");
       try {
         channel.close().sync();
       } catch (InterruptedException e) {
@@ -131,21 +161,28 @@ public class WWSClient implements Closeable {
   private void sendRequest(String req, AbstractCommandHandler handler) {
 
     try {
-      connect();
-      LOGGER.debug("Sending: " + req);
-      AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
-      channel.attr(handlerKey).set(handler);
-      channel.writeAndFlush(req).sync();
-      LOGGER.debug("Sent: " + req);
-      
+      if (connect()) {
+        LOGGER.debug("Sending: " + req);
+        AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
+        channel.attr(handlerKey).set(handler);
+        channel.writeAndFlush(req).sync();
+        LOGGER.debug("Sent: " + req);
 
-      handler.responseWait();
-      LOGGER.debug("Completed: " + req);
-    } catch (InterruptedException ex) {
+        handler.responseWait();
+        LOGGER.debug("Completed: " + req);
+      }
+    } catch (
+
+    InterruptedException ex)
+
+    {
       Thread.currentThread().interrupt();
-    } finally {
+    } finally
+
+    {
       close();
     }
+
   }
 
   /**

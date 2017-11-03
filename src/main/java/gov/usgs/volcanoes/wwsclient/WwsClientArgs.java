@@ -15,6 +15,7 @@ import com.martiansoftware.jsap.Parameter;
 import com.martiansoftware.jsap.Switch;
 
 import gov.usgs.volcanoes.core.args.Args;
+import gov.usgs.volcanoes.core.args.ArgumentException;
 import gov.usgs.volcanoes.core.args.Arguments;
 import gov.usgs.volcanoes.core.args.decorator.ScnlArg;
 import gov.usgs.volcanoes.core.args.decorator.TimeSpanArg;
@@ -92,9 +93,9 @@ public class WwsClientArgs {
    * Class constructor.
    * 
    * @param commandLineArgs the command line arguments
-   * @throws Exception when things go wrong
+   * @throws ArgumentException  when things go wrong
    */
-  public WwsClientArgs(final String[] commandLineArgs) throws Exception {
+  public WwsClientArgs(final String[] commandLineArgs) throws ArgumentException  {
     Arguments args = null;
     args = new Args(PROGRAM_NAME, EXPLANATION, PARAMETERS);
     args = new ScnlArg(false, args);
@@ -106,7 +107,7 @@ public class WwsClientArgs {
 
     if (!jsapResult.success() && !jsapResult.getBoolean("help")) {
 
-      throw new RuntimeException("Try --help");
+      throw new ArgumentException("I'm not sure what to do. Try --help");
       }
 
     verbose = jsapResult.getBoolean("verbose");
@@ -136,10 +137,10 @@ public class WwsClientArgs {
 
     if (sacOutput || txtOutput || rsamOutput || heliOutput) {
       if (channel == null) {
-        throw new RuntimeException("No channel provided.");
+        throw new ArgumentException("No channel provided.");
       }
       if (timeSpan == null) {
-        throw new RuntimeException("No time span provided.");
+        throw new ArgumentException("No time span provided.");
       }
     }
 

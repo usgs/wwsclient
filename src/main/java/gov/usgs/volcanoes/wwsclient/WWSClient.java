@@ -18,6 +18,7 @@ import gov.usgs.plot.data.RSAMData;
 import gov.usgs.plot.data.Wave;
 import gov.usgs.plot.data.file.FileType;
 import gov.usgs.plot.data.file.SeismicDataFile;
+import gov.usgs.volcanoes.core.args.ArgumentException;
 import gov.usgs.volcanoes.core.data.Scnl;
 import gov.usgs.volcanoes.core.time.J2kSec;
 import gov.usgs.volcanoes.core.time.TimeSpan;
@@ -26,13 +27,16 @@ import gov.usgs.volcanoes.wwsclient.handler.AbstractCommandHandler;
 import gov.usgs.volcanoes.wwsclient.handler.GetScnlHeliRawHandler;
 import gov.usgs.volcanoes.wwsclient.handler.GetScnlRsamRawHandler;
 import gov.usgs.volcanoes.wwsclient.handler.GetWaveHandler;
-import gov.usgs.volcanoes.wwsclient.handler.MenuHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetChannelsHandler;
 import gov.usgs.volcanoes.wwsclient.handler.StdoutHandler;
 import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
 import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ConnectTimeoutException;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -49,17 +53,9 @@ import io.netty.util.AttributeKey;
  */
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
     value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
-public class WwsClient implements Closeable {
-  private static final Logger LOGGER = LoggerFactory.getLogger(WwsClient.class);
+public class WWSClient implements Closeable {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
   private static final int DEFAULT_IDLE_TIMEOUT = 30;
-
-  private static final class WWSInitalizer extends ChannelInitializer<SocketChannel> {
-    @Override
-    public void initChannel(SocketChannel ch) throws Exception {
-      ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
-    }
-  }
-
 
   private final String server;
   private final int port;
@@ -73,7 +69,7 @@ public class WwsClient implements Closeable {
    * @param server remote winston address
    * @param port remote winston port
    */
-  public WwsClient(final String server, final int port) {
+  public WWSClient(final String server, final int port) {
     this(server, port, DEFAULT_IDLE_TIMEOUT);
   }
 
@@ -84,16 +80,17 @@ public class WwsClient implements Closeable {
    * @param port remote winston port
    * @param idleTimeout connection idle timeout
    */
-  public WwsClient(String server, int port, int idleTimeout) {
+  public WWSClient(String server, int port, int idleTimeout) {
     this.server = server;
     this.port = port;
     this.idleTimeout = idleTimeout;
   }
 
-  private void connect() throws InterruptedException {
+
+  private boolean connect() throws InterruptedException {
     if (channel != null && channel.isActive()) {
-      LOGGER.debug("Channel already active");
-      return;
+      LOGGER.debug("Reusing connection");
+      return true;
     }
 
     LOGGER.debug("Connecting");
@@ -105,20 +102,52 @@ public class WwsClient implements Closeable {
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       public void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast("idleStateHandler", new IdleStateHandler(60, 30, idleTimeout));
+        ch.pipeline().addLast("idleStateHandler",
+            new IdleStateHandler(0, 0, idleTimeout, TimeUnit.MILLISECONDS));
         ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
+      }
+
+      @Override
+      public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        LOGGER.debug("Exception caught in ChannelInitalizer");
+        cause.printStackTrace();
       }
     });
 
-    channel = b.connect(server, port).sync().channel();
+    b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, idleTimeout);
+    ChannelFuture f = b.connect(server, port);
+    f.awaitUninterruptibly();
+
+    if (f.isCancelled()) {
+      LOGGER.error("Connection attempt to {}:{} canceled in WWSClient.", server, port);
+      return false;
+    } else if (!f.isSuccess()) {
+      Throwable cause = f.cause();
+      if (cause instanceof ConnectTimeoutException) {
+        LOGGER.error("Timeout connecting to {}:{} in WWSClient.", server, port);
+      } else {
+        LOGGER.error("Error connecting to {}:{} in WWSClient. ({})", server, port,
+            cause.getClass().getName());
+        // f.cause().printStackTrace();
+      }
+      return false;
+    } else {
+      channel = f.channel();
+      return true;
+    }
   }
 
   /**
    * Close connection to winston.
    */
   public void close() {
-    if (channel.isActive()) {
-      channel.close();
+    if (channel != null && channel.isActive()) {
+      LOGGER.debug("Closing channel.");
+      try {
+        channel.close().sync();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
     }
     workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
   }
@@ -132,20 +161,28 @@ public class WwsClient implements Closeable {
   private void sendRequest(String req, AbstractCommandHandler handler) {
 
     try {
-      connect();
-      LOGGER.debug("Sending: " + req);
-      AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
-      channel.attr(handlerKey).set(handler);
-      channel.writeAndFlush(req);
+      if (connect()) {
+        LOGGER.debug("Sending: " + req);
+        AttributeKey<AbstractCommandHandler> handlerKey = WWSClientHandler.handlerKey;
+        channel.attr(handlerKey).set(handler);
+        channel.writeAndFlush(req).sync();
+        LOGGER.debug("Sent: " + req);
 
-      handler.responseWait();
-      LOGGER.debug("Completed: " + req);
-    } catch (InterruptedException ex) {
+        handler.responseWait();
+        LOGGER.debug("Completed: " + req);
+      }
+    } catch (
+
+    InterruptedException ex)
+
+    {
       Thread.currentThread().interrupt();
-      throw new RuntimeException(ex);
-    } finally {
-      // close()
+    } finally
+
+    {
+      close();
     }
+
   }
 
   /**
@@ -232,7 +269,8 @@ public class WwsClient implements Closeable {
    * @return requested waveform or null if data is not available
    */
   @Deprecated
-  public Wave getRawData(String station, String comp, String network, String location, double start, double end) {
+  public Wave getRawData(String station, String comp, String network, String location, double start,
+      double end) {
     return getWave(station, comp, network, location, start, end, true);
   }
 
@@ -310,7 +348,7 @@ public class WwsClient implements Closeable {
 
     String filename = scnl.toString("_") + "_" + date + ".sac";
     System.out.println("Writing wave to SAC\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
@@ -339,7 +377,7 @@ public class WwsClient implements Closeable {
   private static void outputText(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     System.out.println("dumping samples as text\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     wws.close();
     for (final int i : wave.buffer) {
@@ -358,7 +396,7 @@ public class WwsClient implements Closeable {
   private static void outputHeli(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     System.out.println("dumping Heli data as text\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     HelicorderData heliData = wws.getHelicorder(scnl, timeSpan, true);
     wws.close();
     System.out.println(heliData.toCSV());
@@ -376,7 +414,7 @@ public class WwsClient implements Closeable {
   private static void outputRsam(final String server, final int port, final TimeSpan timeSpan,
       final int period, final Scnl scnl) {
     System.out.println("dumping RSAM as text\n");
-    final WwsClient wws = new WwsClient(server, port);
+    final WWSClient wws = new WWSClient(server, port);
     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, true);
     wws.close();
     System.out.println(rsam.toCSV());
@@ -401,7 +439,7 @@ public class WwsClient implements Closeable {
     List<Channel> channels = new ArrayList<Channel>();
     String req = String.format("GETCHANNELS: GC%s\n", meta ? " METADATA" : "");
 
-    sendRequest(req, new MenuHandler(channels));
+    sendRequest(req, new GetChannelsHandler(channels));
     return channels;
   }
 
@@ -412,7 +450,7 @@ public class WwsClient implements Closeable {
    * @param port Winston port
    */
   private static void displayMenu(final String server, final int port) {
-    WwsClient wws = new WwsClient(server, port);
+    WWSClient wws = new WWSClient(server, port);
     List<Channel> channels = wws.getChannels();
     System.out.println("Channel count: " + channels.size());
     for (Channel chan : channels) {
@@ -429,7 +467,7 @@ public class WwsClient implements Closeable {
    * @param command Command String to send
    */
   private static void sendCommand(final String server, final int port, final String command) {
-    WwsClient wws = new WwsClient(server, port);
+    WWSClient wws = new WWSClient(server, port);
     wws.sendRequest(command + "\n", new StdoutHandler(System.out));
     wws.close();
   }
@@ -478,10 +516,10 @@ public class WwsClient implements Closeable {
         sendCommand(config.server, config.port, config.command);
       }
 
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    } catch (ArgumentException e) {
+      System.out.println(e.getLocalizedMessage());
     }
-    LOGGER.debug("Done");
+    LOGGER.debug("Exiting.");
   }
 
 }

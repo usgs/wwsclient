@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.plot.data.HelicorderData;
-import gov.usgs.plot.data.RSAMData;
-import gov.usgs.plot.data.Wave;
-import gov.usgs.plot.data.file.FileType;
-import gov.usgs.plot.data.file.SeismicDataFile;
 import gov.usgs.volcanoes.core.args.ArgumentException;
+import gov.usgs.volcanoes.core.data.HelicorderData;
+import gov.usgs.volcanoes.core.data.RSAMData;
 import gov.usgs.volcanoes.core.data.Scnl;
+import gov.usgs.volcanoes.core.data.Wave;
+import gov.usgs.volcanoes.core.data.file.FileType;
+import gov.usgs.volcanoes.core.data.file.SeismicDataFile;
 import gov.usgs.volcanoes.core.time.J2kSec;
 import gov.usgs.volcanoes.core.time.TimeSpan;
 import gov.usgs.volcanoes.winston.Channel;
@@ -55,7 +55,7 @@ import io.netty.util.AttributeKey;
     value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
 public class WWSClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
-  private static final int DEFAULT_IDLE_TIMEOUT = 30;
+  private static final int DEFAULT_IDLE_TIMEOUT = 30000;
 
   private final String server;
   private final int port;
@@ -103,7 +103,7 @@ public class WWSClient implements Closeable {
       @Override
       public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast("idleStateHandler",
-            new IdleStateHandler(0, 0, idleTimeout, TimeUnit.MILLISECONDS));
+            new IdleStateHandler(idleTimeout, idleTimeout, idleTimeout, TimeUnit.MILLISECONDS));
         ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
       }
 

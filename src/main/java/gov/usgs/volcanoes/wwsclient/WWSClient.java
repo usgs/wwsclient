@@ -55,7 +55,7 @@ import io.netty.util.AttributeKey;
     value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
 public class WWSClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
-  private static final int DEFAULT_IDLE_TIMEOUT = 30;
+  private static final int DEFAULT_IDLE_TIMEOUT = 30000;
 
   private final String server;
   private final int port;

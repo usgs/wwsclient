@@ -348,7 +348,7 @@
 <a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
 <a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
 <a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L343" href="#L343">343</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputSac(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputSac(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
 <a class="jxr_linenumber" name="L344" href="#L344">344</a>       <strong class="jxr_keyword">final</strong> Scnl scnl, String outFile) {
 <a class="jxr_linenumber" name="L345" href="#L345">345</a>     System.out.println(<span class="jxr_string">"Writing wave to SAC\n"</span>);
 <a class="jxr_linenumber" name="L346" href="#L346">346</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
@@ -369,7 +369,7 @@
 <a class="jxr_linenumber" name="L361" href="#L361">361</a>     wws.close();
 <a class="jxr_linenumber" name="L362" href="#L362">362</a>   }
 <a class="jxr_linenumber" name="L363" href="#L363">363</a> 
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputSac(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputSac(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
 <a class="jxr_linenumber" name="L365" href="#L365">365</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
 <a class="jxr_linenumber" name="L366" href="#L366">366</a>     <strong class="jxr_keyword">final</strong> DateFormat df = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddHHmmss"</span>);
 <a class="jxr_linenumber" name="L367" href="#L367">367</a>     <strong class="jxr_keyword">final</strong> String date =

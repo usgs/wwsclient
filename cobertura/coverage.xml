@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.0" branch-rate="0.0" lines-covered="0" lines-valid="689" branches-covered="0" branches-valid="216" complexity="2.364864864864865" version="2.1.1" timestamp="1510932785468">
+<coverage line-rate="0.0" branch-rate="0.0" lines-covered="0" lines-valid="689" branches-covered="0" branches-valid="216" complexity="2.364864864864865" version="2.1.1" timestamp="1510936458492">
 	<sources>
 		<source>--source</source>
 		<source>/Users/tparker/git/wwsclient/target/generated-sources/annotations</source>

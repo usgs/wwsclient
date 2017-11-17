@@ -349,188 +349,193 @@
 <a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
 <a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L343" href="#L343">343</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputSac(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>     <strong class="jxr_keyword">final</strong> DateFormat df = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddHHmmss"</span>);
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>     <strong class="jxr_keyword">final</strong> String date =
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>         df.format(<strong class="jxr_keyword">new</strong> Date(timeSpan.startTime)) + <span class="jxr_string">"-"</span> + df.format(<strong class="jxr_keyword">new</strong> Date(timeSpan.endTime));
-<a class="jxr_linenumber" name="L348" href="#L348">348</a> 
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>     String filename = scnl.toString(<span class="jxr_string">"_"</span>) + <span class="jxr_string">"_"</span> + date + <span class="jxr_string">".sac"</span>;
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>     System.out.println(<span class="jxr_string">"Writing wave to SAC\n"</span>);
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>     Wave wave = wws.getWave(scnl, timeSpan, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>     <strong class="jxr_keyword">if</strong> (wave.buffer != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>       System.err.println(<span class="jxr_string">"Date: "</span> + J2kSec.toDateString(wave.getStartTime()));
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>       <strong class="jxr_keyword">final</strong> SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>       file.putWave(scnl.toString(<span class="jxr_string">"$"</span>), wave);
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>         file.write();
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> IOException e) {
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>         System.err.println(<span class="jxr_string">"Couldn't write file: "</span> + e.getLocalizedMessage());
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>         e.printStackTrace();
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>       }
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>       System.out.println(<span class="jxr_string">"No data received, not writing SAC file."</span>);
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>     }
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>     wws.close();
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>   }
-<a class="jxr_linenumber" name="L368" href="#L368">368</a> 
-<a class="jxr_linenumber" name="L369" href="#L369">369</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">   * Retrieve a wave and write to STDOUT.</em>
-<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">   * @param server Winston address</em>
-<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
-<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
-<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
-<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputText(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>     System.out.println(<span class="jxr_string">"dumping samples as text\n"</span>);
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>     Wave wave = wws.getWave(scnl, timeSpan, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>     wws.close();
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> i : wave.buffer) {
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>       System.out.println(i);
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>     }
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>   }
-<a class="jxr_linenumber" name="L387" href="#L387">387</a> 
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">   * Retrieve Heli and write to STDOUT.</em>
-<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">   * @param server Winston address</em>
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
-<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
-<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
-<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputHeli(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>     System.out.println(<span class="jxr_string">"dumping Heli data as text\n"</span>);
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>     HelicorderData heliData = wws.getHelicorder(scnl, timeSpan, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>     wws.close();
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>     System.out.println(heliData.toCSV());
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>   }
-<a class="jxr_linenumber" name="L404" href="#L404">404</a> 
-<a class="jxr_linenumber" name="L405" href="#L405">405</a> 
-<a class="jxr_linenumber" name="L406" href="#L406">406</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">   * Retrieve RSAM and write to STDOUT.</em>
-<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">   * @param server Winston address</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
-<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
-<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
-<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputRsam(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> period, <strong class="jxr_keyword">final</strong> Scnl scnl) {
-<a class="jxr_linenumber" name="L416" href="#L416">416</a>     System.out.println(<span class="jxr_string">"dumping RSAM as text\n"</span>);
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>     wws.close();
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>     System.out.println(rsam.toCSV());
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>   }
-<a class="jxr_linenumber" name="L422" href="#L422">422</a> 
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">   * Retrieve a list of channels from a remote Winston.</em>
-<a class="jxr_linenumber" name="L425" href="#L425">425</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">   * @return List of channels</em>
-<a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>   <strong class="jxr_keyword">public</strong> List&lt;Channel&gt; getChannels() {
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>     <strong class="jxr_keyword">return</strong> getChannels(false);
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>   }
-<a class="jxr_linenumber" name="L431" href="#L431">431</a> 
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">   * Retrieve a list of channels from Winston.</em>
-<a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">   * @param meta if true, request metadata</em>
-<a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">   * @return List of channels</em>
-<a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>   <strong class="jxr_keyword">public</strong> List&lt;Channel&gt; getChannels(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> meta) {
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>     List&lt;Channel&gt; channels = <strong class="jxr_keyword">new</strong> ArrayList&lt;Channel&gt;();
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>     String req = String.format(<span class="jxr_string">"GETCHANNELS: GC%s\n"</span>, meta ? <span class="jxr_string">" METADATA"</span> : <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L441" href="#L441">441</a> 
-<a class="jxr_linenumber" name="L442" href="#L442">442</a>     sendRequest(req, <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/handler/GetChannelsHandler.html">GetChannelsHandler</a>(channels));
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>     <strong class="jxr_keyword">return</strong> channels;
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>   }
-<a class="jxr_linenumber" name="L445" href="#L445">445</a> 
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L447" href="#L447">447</a> <em class="jxr_javadoccomment">   * Print server menu to STDOUT.</em>
-<a class="jxr_linenumber" name="L448" href="#L448">448</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L449" href="#L449">449</a> <em class="jxr_javadoccomment">   * @param server Winston to query</em>
-<a class="jxr_linenumber" name="L450" href="#L450">450</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
-<a class="jxr_linenumber" name="L451" href="#L451">451</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> displayMenu(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port) {
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>     <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>     List&lt;Channel&gt; channels = wws.getChannels();
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>     System.out.println(<span class="jxr_string">"Channel count: "</span> + channels.size());
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>     <strong class="jxr_keyword">for</strong> (Channel chan : channels) {
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>       System.out.println(chan.toMetadataString());
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>     }
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>     wws.close();
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>   }
-<a class="jxr_linenumber" name="L461" href="#L461">461</a> 
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">   * Send a command string to winston and return result to &lt;STDOUT&gt;</em>
-<a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">   * @param server Winston to query</em>
-<a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
-<a class="jxr_linenumber" name="L467" href="#L467">467</a> <em class="jxr_javadoccomment">   * @param command Command String to send</em>
-<a class="jxr_linenumber" name="L468" href="#L468">468</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> sendCommand(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> String command) {
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>     <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>     wws.sendRequest(command + <span class="jxr_string">"\n"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/handler/StdoutHandler.html">StdoutHandler</a>(System.out));
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>     wws.close();
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>   }
-<a class="jxr_linenumber" name="L474" href="#L474">474</a> 
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L476" href="#L476">476</a> <em class="jxr_javadoccomment">   * Here's where it all begins</em>
-<a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L478" href="#L478">478</a> <em class="jxr_javadoccomment">   * @param args command line args</em>
-<a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">   * @see gov.usgs.volcanoes.wwsclient.WwsClientArgs</em>
-<a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(<strong class="jxr_keyword">final</strong> String[] args) {
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>       <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WwsClientArgs.html">WwsClientArgs</a> config = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WwsClientArgs.html">WwsClientArgs</a>(args);
-<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>       <strong class="jxr_keyword">if</strong> (config.menu) {
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>         LOGGER.debug(<span class="jxr_string">"Requesting menu from {}:{}."</span>, config.server, config.port);
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>         displayMenu(config.server, config.port);
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>       }
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>       <strong class="jxr_keyword">final</strong> Scnl scnl, String outFile) {
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>     System.out.println(<span class="jxr_string">"Writing wave to SAC\n"</span>);
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>     Wave wave = wws.getWave(scnl, timeSpan, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>     <strong class="jxr_keyword">if</strong> (wave.buffer != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>       System.err.println(<span class="jxr_string">"Date: "</span> + J2kSec.toDateString(wave.getStartTime()));
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>       <strong class="jxr_keyword">final</strong> SeismicDataFile file = SeismicDataFile.getFile(outFile, FileType.SAC);
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>       file.putWave(scnl.toString(<span class="jxr_string">"$"</span>), wave);
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>         file.write();
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>       } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> IOException e) {
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         System.err.println(<span class="jxr_string">"Couldn't write file: "</span> + e.getLocalizedMessage());
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         e.printStackTrace();
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>       }
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>       System.out.println(<span class="jxr_string">"No data received, not writing SAC file."</span>);
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     }
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>     wws.close();
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>   }
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> 
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputSac(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>     <strong class="jxr_keyword">final</strong> DateFormat df = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddHHmmss"</span>);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>     <strong class="jxr_keyword">final</strong> String date =
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>         df.format(<strong class="jxr_keyword">new</strong> Date(timeSpan.startTime)) + <span class="jxr_string">"-"</span> + df.format(<strong class="jxr_keyword">new</strong> Date(timeSpan.endTime));
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> 
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>     String outFile = scnl.toString(<span class="jxr_string">"_"</span>) + <span class="jxr_string">"_"</span> + date + <span class="jxr_string">".sac"</span>;
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> 
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>     outputSac(server, port, timeSpan, scnl, outFile);
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>   }
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">   * Retrieve a wave and write to STDOUT.</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">   * @param server Winston address</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputText(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>     System.out.println(<span class="jxr_string">"dumping samples as text\n"</span>);
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     Wave wave = wws.getWave(scnl, timeSpan, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>     wws.close();
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> i : wave.buffer) {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>       System.out.println(i);
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     }
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>   }
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> 
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">   * Retrieve Heli and write to STDOUT.</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">   * @param server Winston address</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputHeli(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>       <strong class="jxr_keyword">final</strong> Scnl scnl) {
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>     System.out.println(<span class="jxr_string">"dumping Heli data as text\n"</span>);
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>     HelicorderData heliData = wws.getHelicorder(scnl, timeSpan, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>     wws.close();
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     System.out.println(heliData.toCSV());
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>   }
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> 
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">   * Retrieve RSAM and write to STDOUT.</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">   * @param server Winston address</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">   * @param timeSpan time span to request</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">   * @param scnl SCNL to request</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> outputRsam(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> TimeSpan timeSpan,
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> period, <strong class="jxr_keyword">final</strong> Scnl scnl) {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>     System.out.println(<span class="jxr_string">"dumping RSAM as text\n"</span>);
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>     <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>     RSAMData rsam = wws.getRSAMData(scnl, timeSpan, period, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>     wws.close();
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>     System.out.println(rsam.toCSV());
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>   }
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> <em class="jxr_javadoccomment">   * Retrieve a list of channels from a remote Winston.</em>
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> <em class="jxr_javadoccomment">   * @return List of channels</em>
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>   <strong class="jxr_keyword">public</strong> List&lt;Channel&gt; getChannels() {
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>     <strong class="jxr_keyword">return</strong> getChannels(false);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>   }
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> 
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">   * Retrieve a list of channels from Winston.</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">   * @param meta if true, request metadata</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">   * @return List of channels</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>   <strong class="jxr_keyword">public</strong> List&lt;Channel&gt; getChannels(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> meta) {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>     List&lt;Channel&gt; channels = <strong class="jxr_keyword">new</strong> ArrayList&lt;Channel&gt;();
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>     String req = String.format(<span class="jxr_string">"GETCHANNELS: GC%s\n"</span>, meta ? <span class="jxr_string">" METADATA"</span> : <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> 
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>     sendRequest(req, <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/handler/GetChannelsHandler.html">GetChannelsHandler</a>(channels));
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>     <strong class="jxr_keyword">return</strong> channels;
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>   }
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">   * Print server menu to STDOUT.</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">   * @param server Winston to query</em>
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> displayMenu(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port) {
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>     <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>     List&lt;Channel&gt; channels = wws.getChannels();
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>     System.out.println(<span class="jxr_string">"Channel count: "</span> + channels.size());
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>     <strong class="jxr_keyword">for</strong> (Channel chan : channels) {
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>       System.out.println(chan.toMetadataString());
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>     }
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>     wws.close();
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>   }
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> 
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> <em class="jxr_javadoccomment">   * Send a command string to winston and return result to &lt;STDOUT&gt;</em>
+<a class="jxr_linenumber" name="L469" href="#L469">469</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">   * @param server Winston to query</em>
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> <em class="jxr_javadoccomment">   * @param port Winston port</em>
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> <em class="jxr_javadoccomment">   * @param command Command String to send</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> sendCommand(<strong class="jxr_keyword">final</strong> String server, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port, <strong class="jxr_keyword">final</strong> String command) {
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>     <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a> wws = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WWSClient.html">WWSClient</a>(server, port);
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>     wws.sendRequest(command + <span class="jxr_string">"\n"</span>, <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/handler/StdoutHandler.html">StdoutHandler</a>(System.out));
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>     wws.close();
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>   }
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">   * Here's where it all begins</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">   * @param args command line args</em>
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">   * @see gov.usgs.volcanoes.wwsclient.WwsClientArgs</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(<strong class="jxr_keyword">final</strong> String[] args) {
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>       <strong class="jxr_keyword">final</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WwsClientArgs.html">WwsClientArgs</a> config = <strong class="jxr_keyword">new</strong> <a href="../../../../gov/usgs/volcanoes/wwsclient/WwsClientArgs.html">WwsClientArgs</a>(args);
 <a class="jxr_linenumber" name="L489" href="#L489">489</a> 
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>       <strong class="jxr_keyword">if</strong> (config.sacOutput) {
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>         LOGGER.debug(<span class="jxr_string">"Requesting {} from {}:{} for {} and writing to SAC."</span>, config.channel,
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>             config.server, config.port, config.timeSpan);
-<a class="jxr_linenumber" name="L493" href="#L493">493</a>         outputSac(config.server, config.port, config.timeSpan, config.channel);
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>       }
-<a class="jxr_linenumber" name="L495" href="#L495">495</a> 
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>       <strong class="jxr_keyword">if</strong> (config.txtOutput) {
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>         LOGGER.debug(<span class="jxr_string">"Requesting {} from {}:{} for {} and writing to TXT."</span>, config.channel,
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>             config.server, config.port, config.timeSpan);
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>         outputText(config.server, config.port, config.timeSpan, config.channel);
-<a class="jxr_linenumber" name="L500" href="#L500">500</a>       }
-<a class="jxr_linenumber" name="L501" href="#L501">501</a> 
-<a class="jxr_linenumber" name="L502" href="#L502">502</a>       <strong class="jxr_keyword">if</strong> (config.rsamOutput) {
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>         LOGGER.debug(<span class="jxr_string">"Requesting RSAM {} from {}:{} for {} and writing to TXT."</span>, config.channel,
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>             config.server, config.port, config.timeSpan);
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>         outputRsam(config.server, config.port, config.timeSpan, config.rsamPeriod, config.channel);
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>       }
-<a class="jxr_linenumber" name="L507" href="#L507">507</a> 
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>       <strong class="jxr_keyword">if</strong> (config.heliOutput) {
-<a class="jxr_linenumber" name="L509" href="#L509">509</a>         LOGGER.debug(<span class="jxr_string">"Requesting helicorder data {} from {}:{} for {}."</span>, config.channel,
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>             config.server, config.port, config.timeSpan);
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>         outputHeli(config.server, config.port, config.timeSpan, config.channel);
-<a class="jxr_linenumber" name="L512" href="#L512">512</a>       }
-<a class="jxr_linenumber" name="L513" href="#L513">513</a> 
-<a class="jxr_linenumber" name="L514" href="#L514">514</a>       <strong class="jxr_keyword">if</strong> (config.command != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>         LOGGER.debug(<span class="jxr_string">"Sending: {}"</span>, config.command);
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>         sendCommand(config.server, config.port, config.command);
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>       <strong class="jxr_keyword">if</strong> (config.menu) {
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>         LOGGER.debug(<span class="jxr_string">"Requesting menu from {}:{}."</span>, config.server, config.port);
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>         displayMenu(config.server, config.port);
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>       }
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> 
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>       <strong class="jxr_keyword">if</strong> (config.sacOutput) {
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>         LOGGER.debug(<span class="jxr_string">"Requesting {} from {}:{} for {} and writing to SAC."</span>, config.channel,
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>             config.server, config.port, config.timeSpan);
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>         outputSac(config.server, config.port, config.timeSpan, config.channel);
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>       }
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> 
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>       <strong class="jxr_keyword">if</strong> (config.txtOutput) {
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>         LOGGER.debug(<span class="jxr_string">"Requesting {} from {}:{} for {} and writing to TXT."</span>, config.channel,
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>             config.server, config.port, config.timeSpan);
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>         outputText(config.server, config.port, config.timeSpan, config.channel);
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>       }
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> 
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>       <strong class="jxr_keyword">if</strong> (config.rsamOutput) {
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>         LOGGER.debug(<span class="jxr_string">"Requesting RSAM {} from {}:{} for {} and writing to TXT."</span>, config.channel,
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>             config.server, config.port, config.timeSpan);
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>         outputRsam(config.server, config.port, config.timeSpan, config.rsamPeriod, config.channel);
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>       }
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> 
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>       <strong class="jxr_keyword">if</strong> (config.heliOutput) {
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>         LOGGER.debug(<span class="jxr_string">"Requesting helicorder data {} from {}:{} for {}."</span>, config.channel,
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>             config.server, config.port, config.timeSpan);
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>         outputHeli(config.server, config.port, config.timeSpan, config.channel);
 <a class="jxr_linenumber" name="L517" href="#L517">517</a>       }
 <a class="jxr_linenumber" name="L518" href="#L518">518</a> 
-<a class="jxr_linenumber" name="L519" href="#L519">519</a>     } <strong class="jxr_keyword">catch</strong> (ArgumentException e) {
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>       System.out.println(e.getLocalizedMessage());
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>     }
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>     LOGGER.debug(<span class="jxr_string">"Exiting."</span>);
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>   }
-<a class="jxr_linenumber" name="L524" href="#L524">524</a> 
-<a class="jxr_linenumber" name="L525" href="#L525">525</a> }
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>       <strong class="jxr_keyword">if</strong> (config.command != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>         LOGGER.debug(<span class="jxr_string">"Sending: {}"</span>, config.command);
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         sendCommand(config.server, config.port, config.command);
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>       }
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> 
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>     } <strong class="jxr_keyword">catch</strong> (ArgumentException e) {
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>       System.out.println(e.getLocalizedMessage());
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>     }
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>     LOGGER.debug(<span class="jxr_string">"Exiting."</span>);
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>   }
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> 
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017. All rights reserved.</div>

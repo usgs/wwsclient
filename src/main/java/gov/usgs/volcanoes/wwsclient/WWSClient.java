@@ -340,7 +340,7 @@ public class WWSClient implements Closeable {
    * @param timeSpan time span to request
    * @param scnl SCNL to request
    */
-  private static void outputSac(final String server, final int port, final TimeSpan timeSpan,
+  public static void outputSac(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl, String outFile) {
     System.out.println("Writing wave to SAC\n");
     final WWSClient wws = new WWSClient(server, port);
@@ -361,7 +361,7 @@ public class WWSClient implements Closeable {
     wws.close();
   }
 
-  private static void outputSac(final String server, final int port, final TimeSpan timeSpan,
+  public static void outputSac(final String server, final int port, final TimeSpan timeSpan,
       final Scnl scnl) {
     final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
     final String date =

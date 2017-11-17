@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.0" branch-rate="0.0" lines-covered="0" lines-valid="652" branches-covered="0" branches-valid="180" complexity="2.364864864864865" version="2.1.1" timestamp="1510868711810">
+<coverage line-rate="0.0" branch-rate="0.0" lines-covered="0" lines-valid="676" branches-covered="0" branches-valid="200" complexity="2.4027777777777777" version="2.1.1" timestamp="1510931723688">
 	<sources>
 		<source>--source</source>
 		<source>/Users/tparker/git/wwsclient/target/generated-sources/annotations</source>
 		<source>/Users/tparker/git/wwsclient/src/main/java</source>
 	</sources>
 	<packages>
-		<package name="gov.usgs.volcanoes.wwsclient" line-rate="0.0" branch-rate="0.0" complexity="2.3461538461538463">
+		<package name="gov.usgs.volcanoes.wwsclient" line-rate="0.0" branch-rate="0.0" complexity="2.4">
 			<classes>
 				<class name="gov.usgs.volcanoes.wwsclient.ClientUtils" filename="gov/usgs/volcanoes/wwsclient/ClientUtils.java" line-rate="0.0" branch-rate="0.0" complexity="3.0">
 					<methods>
@@ -74,7 +74,7 @@
 						<line number="11" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="gov.usgs.volcanoes.wwsclient.WWSClient" filename="gov/usgs/volcanoes/wwsclient/WWSClient.java" line-rate="0.0" branch-rate="0.0" complexity="2.12">
+				<class name="gov.usgs.volcanoes.wwsclient.WWSClient" filename="gov/usgs/volcanoes/wwsclient/WWSClient.java" line-rate="0.0" branch-rate="0.0" complexity="2.1666666666666665">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="0.0" branch-rate="1.0" complexity="0">
 							<lines>
@@ -200,10 +200,14 @@
 						</method>
 						<method name="displayMenu" signature="(Ljava/lang/String;I)V" line-rate="0.0" branch-rate="0.0" complexity="0">
 							<lines>
-								<line number="416" hits="0" branch="false"/>
-								<line number="417" hits="0" branch="false"/>
-								<line number="418" hits="0" branch="false"/>
-								<line number="419" hits="0" branch="true" condition-coverage="0% (0/2)">
+								<line number="453" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="454" hits="0" branch="false"/>
+								<line number="455" hits="0" branch="false"/>
+								<line number="456" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
@@ -229,11 +233,19 @@
 						<method name="getChannels" signature="()Ljava/util/List;" line-rate="0.0" branch-rate="1.0" complexity="0">
 							<lines>
 								<line number="392" hits="0" branch="false"/>
+								<line number="429" hits="0" branch="false"/>
 								<line number="433" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="getChannels" signature="(Z)Ljava/util/List;" line-rate="0.0" branch-rate="0.0" complexity="0">
 							<lines>
+								<line number="439" hits="0" branch="false"/>
+								<line number="440" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="442" hits="0" branch="false"/>
 								<line number="443" hits="0" branch="false"/>
 								<line number="444" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
@@ -389,13 +401,6 @@
 								</line>
 								<line number="449" hits="0" branch="false"/>
 								<line number="450" hits="0" branch="false"/>
-								<line number="453" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="454" hits="0" branch="false"/>
-								<line number="456" hits="0" branch="false"/>
 								<line number="465" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
@@ -403,18 +408,16 @@
 								</line>
 								<line number="466" hits="0" branch="false"/>
 								<line number="468" hits="0" branch="false"/>
-								<line number="471" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="472" hits="0" branch="false"/>
 								<line number="478" hits="0" branch="false"/>
 								<line number="479" hits="0" branch="false"/>
 								<line number="482" hits="0" branch="false"/>
 								<line number="483" hits="0" branch="false"/>
 								<line number="484" hits="0" branch="false"/>
-								<line number="485" hits="0" branch="false"/>
+								<line number="485" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="486" hits="0" branch="false"/>
 								<line number="487" hits="0" branch="false"/>
 								<line number="489" hits="0" branch="true" condition-coverage="0% (0/2)">
@@ -422,36 +425,65 @@
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
-								<line number="490" hits="0" branch="false"/>
+								<line number="490" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="491" hits="0" branch="false"/>
+								<line number="493" hits="0" branch="false"/>
 								<line number="494" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
 								<line number="495" hits="0" branch="false"/>
+								<line number="496" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="497" hits="0" branch="false"/>
+								<line number="499" hits="0" branch="false"/>
 								<line number="500" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
 								<line number="501" hits="0" branch="false"/>
+								<line number="502" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="503" hits="0" branch="false"/>
+								<line number="505" hits="0" branch="false"/>
 								<line number="506" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
 								<line number="507" hits="0" branch="false"/>
+								<line number="508" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="509" hits="0" branch="false"/>
+								<line number="511" hits="0" branch="false"/>
 								<line number="512" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
 								<line number="513" hits="0" branch="false"/>
+								<line number="514" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="515" hits="0" branch="false"/>
+								<line number="516" hits="0" branch="false"/>
 								<line number="518" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
@@ -459,6 +491,8 @@
 								</line>
 								<line number="519" hits="0" branch="false"/>
 								<line number="520" hits="0" branch="false"/>
+								<line number="521" hits="0" branch="false"/>
+								<line number="522" hits="0" branch="false"/>
 								<line number="523" hits="0" branch="false"/>
 								<line number="524" hits="0" branch="false"/>
 								<line number="525" hits="0" branch="false"/>
@@ -468,9 +502,11 @@
 						</method>
 						<method name="outputHeli" signature="(Ljava/lang/String;ILgov/usgs/volcanoes/core/time/TimeSpan;Lgov/usgs/volcanoes/core/data/Scnl;)V" line-rate="0.0" branch-rate="0.0" complexity="0">
 							<lines>
-								<line number="363" hits="0" branch="false"/>
-								<line number="364" hits="0" branch="false"/>
 								<line number="365" hits="0" branch="false"/>
+								<line number="398" hits="0" branch="false"/>
+								<line number="399" hits="0" branch="false"/>
+								<line number="400" hits="0" branch="false"/>
+								<line number="401" hits="0" branch="false"/>
 								<line number="402" hits="0" branch="false"/>
 								<line number="403" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
@@ -483,12 +519,16 @@
 								<line number="407" hits="0" branch="false"/>
 							</lines>
 						</method>
-						<method name="outputRsam" signature="(Ljava/lang/String;ILgov/usgs/volcanoes/core/time/TimeSpan;ILgov/usgs/volcanoes/core/data/Scnl;)V" line-rate="0.0" branch-rate="1.0" complexity="0">
+						<method name="outputRsam" signature="(Ljava/lang/String;ILgov/usgs/volcanoes/core/time/TimeSpan;ILgov/usgs/volcanoes/core/data/Scnl;)V" line-rate="0.0" branch-rate="0.0" complexity="0">
 							<lines>
-								<line number="379" hits="0" branch="false"/>
-								<line number="380" hits="0" branch="false"/>
-								<line number="381" hits="0" branch="false"/>
-								<line number="382" hits="0" branch="false"/>
+								<line number="416" hits="0" branch="false"/>
+								<line number="417" hits="0" branch="false"/>
+								<line number="418" hits="0" branch="false"/>
+								<line number="419" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="420" hits="0" branch="false"/>
 								<line number="421" hits="0" branch="false"/>
 								<line number="422" hits="0" branch="false"/>
@@ -516,6 +556,31 @@
 								<line number="323" hits="0" branch="false"/>
 								<line number="324" hits="0" branch="false"/>
 								<line number="329" hits="0" branch="false"/>
+								<line number="345" hits="0" branch="false"/>
+								<line number="346" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="349" hits="0" branch="false"/>
+								<line number="350" hits="0" branch="false"/>
+								<line number="351" hits="0" branch="false"/>
+								<line number="352" hits="0" branch="false"/>
+								<line number="353" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="354" hits="0" branch="false"/>
+								<line number="355" hits="0" branch="false"/>
+								<line number="356" hits="0" branch="false"/>
+								<line number="358" hits="0" branch="false"/>
+								<line number="359" hits="0" branch="false"/>
+								<line number="360" hits="0" branch="false"/>
+								<line number="361" hits="0" branch="false"/>
+								<line number="362" hits="0" branch="false"/>
+								<line number="363" hits="0" branch="false"/>
+								<line number="364" hits="0" branch="false"/>
 								<line number="366" hits="0" branch="false"/>
 								<line number="367" hits="0" branch="false"/>
 								<line number="369" hits="0" branch="false"/>
@@ -525,30 +590,13 @@
 						</method>
 						<method name="outputSac" signature="(Ljava/lang/String;ILgov/usgs/volcanoes/core/time/TimeSpan;Lgov/usgs/volcanoes/core/data/Scnl;Ljava/lang/String;)V" line-rate="0.0" branch-rate="0.0" complexity="0">
 							<lines>
-								<line number="345" hits="0" branch="false"/>
-								<line number="346" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
 								<line number="347" hits="0" branch="false"/>
 								<line number="348" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
-								<line number="349" hits="0" branch="false"/>
-								<line number="350" hits="0" branch="false"/>
-								<line number="351" hits="0" branch="false"/>
-								<line number="353" hits="0" branch="false"/>
-								<line number="354" hits="0" branch="false"/>
-								<line number="355" hits="0" branch="false"/>
-								<line number="356" hits="0" branch="false"/>
 								<line number="357" hits="0" branch="false"/>
-								<line number="358" hits="0" branch="false"/>
-								<line number="359" hits="0" branch="false"/>
-								<line number="361" hits="0" branch="false"/>
-								<line number="362" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="outputText" signature="(Ljava/lang/String;ILgov/usgs/volcanoes/core/time/TimeSpan;Lgov/usgs/volcanoes/core/data/Scnl;)V" line-rate="0.0" branch-rate="0.0" complexity="0">
@@ -556,7 +604,15 @@
 								<line number="342" hits="0" branch="false"/>
 								<line number="343" hits="0" branch="false"/>
 								<line number="344" hits="0" branch="false"/>
-								<line number="383" hits="0" branch="false"/>
+								<line number="379" hits="0" branch="false"/>
+								<line number="380" hits="0" branch="false"/>
+								<line number="381" hits="0" branch="false"/>
+								<line number="382" hits="0" branch="false"/>
+								<line number="383" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="384" hits="0" branch="false"/>
 								<line number="385" hits="0" branch="false"/>
 								<line number="386" hits="0" branch="false"/>
@@ -574,6 +630,14 @@
 								<line number="434" hits="0" branch="false"/>
 								<line number="435" hits="0" branch="false"/>
 								<line number="436" hits="0" branch="false"/>
+								<line number="470" hits="0" branch="false"/>
+								<line number="471" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="472" hits="0" branch="false"/>
+								<line number="473" hits="0" branch="false"/>
 								<line number="474" hits="0" branch="false"/>
 								<line number="475" hits="0" branch="false"/>
 								<line number="476" hits="0" branch="false"/>
@@ -837,13 +901,19 @@
 						<line number="349" hits="0" branch="false"/>
 						<line number="350" hits="0" branch="false"/>
 						<line number="351" hits="0" branch="false"/>
-						<line number="353" hits="0" branch="false"/>
+						<line number="352" hits="0" branch="false"/>
+						<line number="353" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="354" hits="0" branch="false"/>
 						<line number="355" hits="0" branch="false"/>
 						<line number="356" hits="0" branch="false"/>
 						<line number="357" hits="0" branch="false"/>
 						<line number="358" hits="0" branch="false"/>
 						<line number="359" hits="0" branch="false"/>
+						<line number="360" hits="0" branch="false"/>
 						<line number="361" hits="0" branch="false"/>
 						<line number="362" hits="0" branch="false"/>
 						<line number="363" hits="0" branch="false"/>
@@ -858,7 +928,11 @@
 						<line number="380" hits="0" branch="false"/>
 						<line number="381" hits="0" branch="false"/>
 						<line number="382" hits="0" branch="false"/>
-						<line number="383" hits="0" branch="false"/>
+						<line number="383" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="384" hits="0" branch="false"/>
 						<line number="385" hits="0" branch="false"/>
 						<line number="386" hits="0" branch="false"/>
@@ -870,6 +944,10 @@
 						<line number="388" hits="0" branch="false"/>
 						<line number="390" hits="0" branch="false"/>
 						<line number="392" hits="0" branch="false"/>
+						<line number="398" hits="0" branch="false"/>
+						<line number="399" hits="0" branch="false"/>
+						<line number="400" hits="0" branch="false"/>
+						<line number="401" hits="0" branch="false"/>
 						<line number="402" hits="0" branch="false"/>
 						<line number="403" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
@@ -894,10 +972,18 @@
 						<line number="423" hits="0" branch="false"/>
 						<line number="424" hits="0" branch="false"/>
 						<line number="425" hits="0" branch="false"/>
+						<line number="429" hits="0" branch="false"/>
 						<line number="433" hits="0" branch="false"/>
 						<line number="434" hits="0" branch="false"/>
 						<line number="435" hits="0" branch="false"/>
 						<line number="436" hits="0" branch="false"/>
+						<line number="439" hits="0" branch="false"/>
+						<line number="440" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="442" hits="0" branch="false"/>
 						<line number="443" hits="0" branch="false"/>
 						<line number="444" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
@@ -919,7 +1005,12 @@
 							</conditions>
 						</line>
 						<line number="454" hits="0" branch="false"/>
-						<line number="456" hits="0" branch="false"/>
+						<line number="455" hits="0" branch="false"/>
+						<line number="456" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="457" hits="0" branch="false"/>
 						<line number="458" hits="0" branch="false"/>
 						<line number="459" hits="0" branch="true" condition-coverage="0% (0/2)">
@@ -943,12 +1034,14 @@
 						</line>
 						<line number="466" hits="0" branch="false"/>
 						<line number="468" hits="0" branch="false"/>
+						<line number="470" hits="0" branch="false"/>
 						<line number="471" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
 						<line number="472" hits="0" branch="false"/>
+						<line number="473" hits="0" branch="false"/>
 						<line number="474" hits="0" branch="false"/>
 						<line number="475" hits="0" branch="false"/>
 						<line number="476" hits="0" branch="false"/>
@@ -962,7 +1055,11 @@
 						<line number="482" hits="0" branch="false"/>
 						<line number="483" hits="0" branch="false"/>
 						<line number="484" hits="0" branch="false"/>
-						<line number="485" hits="0" branch="false"/>
+						<line number="485" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="486" hits="0" branch="false"/>
 						<line number="487" hits="0" branch="false"/>
 						<line number="489" hits="0" branch="true" condition-coverage="0% (0/2)">
@@ -970,36 +1067,65 @@
 								<condition number="0" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
-						<line number="490" hits="0" branch="false"/>
+						<line number="490" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="491" hits="0" branch="false"/>
+						<line number="493" hits="0" branch="false"/>
 						<line number="494" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
 						<line number="495" hits="0" branch="false"/>
+						<line number="496" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="497" hits="0" branch="false"/>
+						<line number="499" hits="0" branch="false"/>
 						<line number="500" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
 						<line number="501" hits="0" branch="false"/>
+						<line number="502" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="503" hits="0" branch="false"/>
+						<line number="505" hits="0" branch="false"/>
 						<line number="506" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
 						<line number="507" hits="0" branch="false"/>
+						<line number="508" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="509" hits="0" branch="false"/>
+						<line number="511" hits="0" branch="false"/>
 						<line number="512" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
 						<line number="513" hits="0" branch="false"/>
+						<line number="514" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="515" hits="0" branch="false"/>
+						<line number="516" hits="0" branch="false"/>
 						<line number="518" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
@@ -1007,6 +1133,8 @@
 						</line>
 						<line number="519" hits="0" branch="false"/>
 						<line number="520" hits="0" branch="false"/>
+						<line number="521" hits="0" branch="false"/>
+						<line number="522" hits="0" branch="false"/>
 						<line number="523" hits="0" branch="false"/>
 						<line number="524" hits="0" branch="false"/>
 						<line number="525" hits="0" branch="false"/>
@@ -1014,7 +1142,7 @@
 						<line number="527" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="gov.usgs.volcanoes.wwsclient.WWSClient$1" filename="gov/usgs/volcanoes/wwsclient/WWSClient.java" line-rate="0.0" branch-rate="1.0" complexity="2.12">
+				<class name="gov.usgs.volcanoes.wwsclient.WWSClient$1" filename="gov/usgs/volcanoes/wwsclient/WWSClient.java" line-rate="0.0" branch-rate="1.0" complexity="2.1666666666666665">
 					<methods>
 						<method name="&lt;init&gt;" signature="(Lgov/usgs/volcanoes/wwsclient/WWSClient;)V" line-rate="1.0" branch-rate="1.0" complexity="0">
 							<lines>
@@ -1056,7 +1184,7 @@
 						<line number="114" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="gov.usgs.volcanoes.wwsclient.WwsClient" filename="gov/usgs/volcanoes/wwsclient/WwsClient.java" line-rate="0.0" branch-rate="0.0" complexity="2.12">
+				<class name="gov.usgs.volcanoes.wwsclient.WwsClient" filename="gov/usgs/volcanoes/wwsclient/WwsClient.java" line-rate="0.0" branch-rate="0.0" complexity="2.1666666666666665">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="0.0" branch-rate="1.0" complexity="0">
 							<lines>
@@ -1582,7 +1710,7 @@
 						<line number="486" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="gov.usgs.volcanoes.wwsclient.WwsClient$1" filename="gov/usgs/volcanoes/wwsclient/WwsClient.java" line-rate="0.0" branch-rate="1.0" complexity="2.12">
+				<class name="gov.usgs.volcanoes.wwsclient.WwsClient$1" filename="gov/usgs/volcanoes/wwsclient/WwsClient.java" line-rate="0.0" branch-rate="1.0" complexity="2.1666666666666665">
 					<methods>
 						<method name="&lt;init&gt;" signature="(Lgov/usgs/volcanoes/wwsclient/WwsClient;)V" line-rate="1.0" branch-rate="1.0" complexity="0">
 							<lines>

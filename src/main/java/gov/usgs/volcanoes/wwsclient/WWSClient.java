@@ -341,18 +341,13 @@ public class WWSClient implements Closeable {
    * @param scnl SCNL to request
    */
   private static void outputSac(final String server, final int port, final TimeSpan timeSpan,
-      final Scnl scnl) {
-    final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-    final String date =
-        df.format(new Date(timeSpan.startTime)) + "-" + df.format(new Date(timeSpan.endTime));
-
-    String filename = scnl.toString("_") + "_" + date + ".sac";
+      final Scnl scnl, String outFile) {
     System.out.println("Writing wave to SAC\n");
     final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
-      final SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
+      final SeismicDataFile file = SeismicDataFile.getFile(outFile, FileType.SAC);
       file.putWave(scnl.toString("$"), wave);
       try {
         file.write();
@@ -366,6 +361,16 @@ public class WWSClient implements Closeable {
     wws.close();
   }
 
+  private static void outputSac(final String server, final int port, final TimeSpan timeSpan,
+      final Scnl scnl) {
+    final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+    final String date =
+        df.format(new Date(timeSpan.startTime)) + "-" + df.format(new Date(timeSpan.endTime));
+
+    String outFile = scnl.toString("_") + "_" + date + ".sac";
+
+    outputSac(server, port, timeSpan, scnl, outFile);
+  }
   /**
    * Retrieve a wave and write to STDOUT.
    * 

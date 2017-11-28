@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.plot.data.HelicorderData;
-import gov.usgs.plot.data.RSAMData;
-import gov.usgs.plot.data.Wave;
-import gov.usgs.plot.data.file.FileType;
-import gov.usgs.plot.data.file.SeismicDataFile;
 import gov.usgs.volcanoes.core.args.ArgumentException;
+import gov.usgs.volcanoes.core.data.HelicorderData;
+import gov.usgs.volcanoes.core.data.RSAMData;
 import gov.usgs.volcanoes.core.data.Scnl;
+import gov.usgs.volcanoes.core.data.Wave;
+import gov.usgs.volcanoes.core.data.file.FileType;
+import gov.usgs.volcanoes.core.data.file.SeismicDataFile;
 import gov.usgs.volcanoes.core.time.J2kSec;
 import gov.usgs.volcanoes.core.time.TimeSpan;
 import gov.usgs.volcanoes.winston.Channel;
@@ -55,7 +55,7 @@ import io.netty.util.AttributeKey;
     value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "Protocol requires just a LF")
 public class WWSClient implements Closeable {
   private static final Logger LOGGER = LoggerFactory.getLogger(WWSClient.class);
-  private static final int DEFAULT_IDLE_TIMEOUT = 30;
+  private static final int DEFAULT_IDLE_TIMEOUT = 30000;
 
   private final String server;
   private final int port;
@@ -103,7 +103,7 @@ public class WWSClient implements Closeable {
       @Override
       public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast("idleStateHandler",
-            new IdleStateHandler(0, 0, idleTimeout, TimeUnit.MILLISECONDS));
+            new IdleStateHandler(idleTimeout, idleTimeout, idleTimeout, TimeUnit.MILLISECONDS));
         ch.pipeline().addLast(new StringEncoder()).addLast(new WWSClientHandler());
       }
 
@@ -340,19 +340,14 @@ public class WWSClient implements Closeable {
    * @param timeSpan time span to request
    * @param scnl SCNL to request
    */
-  private static void outputSac(final String server, final int port, final TimeSpan timeSpan,
-      final Scnl scnl) {
-    final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-    final String date =
-        df.format(new Date(timeSpan.startTime)) + "-" + df.format(new Date(timeSpan.endTime));
-
-    String filename = scnl.toString("_") + "_" + date + ".sac";
+  public static void outputSac(final String server, final int port, final TimeSpan timeSpan,
+      final Scnl scnl, String outFile) {
     System.out.println("Writing wave to SAC\n");
     final WWSClient wws = new WWSClient(server, port);
     Wave wave = wws.getWave(scnl, timeSpan, true);
     if (wave.buffer != null) {
       System.err.println("Date: " + J2kSec.toDateString(wave.getStartTime()));
-      final SeismicDataFile file = SeismicDataFile.getFile(filename, FileType.SAC);
+      final SeismicDataFile file = SeismicDataFile.getFile(outFile, FileType.SAC);
       file.putWave(scnl.toString("$"), wave);
       try {
         file.write();
@@ -366,6 +361,16 @@ public class WWSClient implements Closeable {
     wws.close();
   }
 
+  public static void outputSac(final String server, final int port, final TimeSpan timeSpan,
+      final Scnl scnl) {
+    final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+    final String date =
+        df.format(new Date(timeSpan.startTime)) + "-" + df.format(new Date(timeSpan.endTime));
+
+    String outFile = scnl.toString("_") + "_" + date + ".sac";
+
+    outputSac(server, port, timeSpan, scnl, outFile);
+  }
   /**
    * Retrieve a wave and write to STDOUT.
    * 

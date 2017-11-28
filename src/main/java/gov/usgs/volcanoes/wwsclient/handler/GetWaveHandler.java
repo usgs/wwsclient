@@ -7,8 +7,8 @@ import java.nio.ByteBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.plot.data.Wave;
 import gov.usgs.volcanoes.core.Zip;
+import gov.usgs.volcanoes.core.data.Wave;
 import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
 

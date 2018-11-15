@@ -34,7 +34,7 @@ public class WwsClientArgs {
   /** format of time on cmd line */
   public static final String INPUT_TIME_FORMAT = "yyyyMMddHHmm";
 
-  private static final String PROGRAM_NAME = "java -jar gov.usgs.volcanoes.winston.WWSClient";
+  private static final String PROGRAM_NAME = "java -jar wwsclient.jar";
   private static final String EXPLANATION = "I am the Winston Wave Server client.\n";
 
   private static final Parameter[] PARAMETERS = new Parameter[] {

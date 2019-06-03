@@ -1,22 +1,16 @@
 package gov.usgs.volcanoes.wwsclient.handler;
 
+import gov.usgs.volcanoes.core.util.UtilException;
+import gov.usgs.volcanoes.winston.Channel;
+import gov.usgs.volcanoes.wwsclient.ClientUtils;
+
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.volcanoes.core.data.Scnl;
-import gov.usgs.volcanoes.core.time.TimeSpan;
-import gov.usgs.volcanoes.core.util.UtilException;
-import gov.usgs.volcanoes.winston.Channel;
-import gov.usgs.volcanoes.wwsclient.ClientUtils;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 
 /**
  * Receive and process response from a winston GETMENU request.
@@ -25,7 +19,7 @@ import io.netty.buffer.ByteBufUtil;
  */
 public class GetChannelsHandler extends AbstractCommandHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(GetChannelsHandler.class);
-  private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  //private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   private int linesTotal;
   private int linesRead;
@@ -53,7 +47,8 @@ public class GetChannelsHandler extends AbstractCommandHandler {
         LOGGER.debug("Still waiting for full response line.");
         return;
       } else {
-        linesTotal = Integer.parseInt(header.split(" ")[1]);
+        String lines = header.split(" ")[1].trim();
+        linesTotal = Integer.parseInt(lines);
         LOGGER.debug("Server has {} channels.", linesTotal);
       }
     }

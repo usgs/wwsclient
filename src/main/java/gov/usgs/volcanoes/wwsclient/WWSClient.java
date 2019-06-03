@@ -1,5 +1,25 @@
 package gov.usgs.volcanoes.wwsclient;
 
+import gov.usgs.volcanoes.core.args.ArgumentException;
+import gov.usgs.volcanoes.core.data.HelicorderData;
+import gov.usgs.volcanoes.core.data.RSAMData;
+import gov.usgs.volcanoes.core.data.Scnl;
+import gov.usgs.volcanoes.core.data.Wave;
+import gov.usgs.volcanoes.core.data.file.FileType;
+import gov.usgs.volcanoes.core.data.file.SeismicDataFile;
+import gov.usgs.volcanoes.core.time.J2kSec;
+import gov.usgs.volcanoes.core.time.TimeSpan;
+import gov.usgs.volcanoes.winston.Channel;
+import gov.usgs.volcanoes.wwsclient.handler.AbstractCommandHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetChannelsHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetMetadataHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetScnlHeliRawHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetScnlRsamRawHandler;
+import gov.usgs.volcanoes.wwsclient.handler.GetWaveHandler;
+import gov.usgs.volcanoes.wwsclient.handler.StdoutHandler;
+import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
+import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -13,24 +33,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.usgs.volcanoes.core.args.ArgumentException;
-import gov.usgs.volcanoes.core.data.HelicorderData;
-import gov.usgs.volcanoes.core.data.RSAMData;
-import gov.usgs.volcanoes.core.data.Scnl;
-import gov.usgs.volcanoes.core.data.Wave;
-import gov.usgs.volcanoes.core.data.file.FileType;
-import gov.usgs.volcanoes.core.data.file.SeismicDataFile;
-import gov.usgs.volcanoes.core.time.J2kSec;
-import gov.usgs.volcanoes.core.time.TimeSpan;
-import gov.usgs.volcanoes.winston.Channel;
-import gov.usgs.volcanoes.wwsclient.handler.AbstractCommandHandler;
-import gov.usgs.volcanoes.wwsclient.handler.GetScnlHeliRawHandler;
-import gov.usgs.volcanoes.wwsclient.handler.GetScnlRsamRawHandler;
-import gov.usgs.volcanoes.wwsclient.handler.GetWaveHandler;
-import gov.usgs.volcanoes.wwsclient.handler.GetChannelsHandler;
-import gov.usgs.volcanoes.wwsclient.handler.StdoutHandler;
-import gov.usgs.volcanoes.wwsclient.handler.VersionHandler;
-import gov.usgs.volcanoes.wwsclient.handler.WWSClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -445,6 +447,19 @@ public class WWSClient implements Closeable {
     String req = String.format("GETCHANNELS: GC%s\n", meta ? " METADATA" : "");
 
     sendRequest(req, new GetChannelsHandler(channels));
+    return channels;
+  }
+  
+  /**
+   * Retrieve metadata from Winston.
+   * 
+   * @return List of channels with metadata
+   */
+  public List<Channel> getInstrumentMetadata() {
+    List<Channel> channels = new ArrayList<Channel>();
+    String req = String.format("GETMETADATA 1 INSTRUMENT\n");
+
+    sendRequest(req, new GetMetadataHandler(channels));
     return channels;
   }
 

@@ -17,25 +17,24 @@ import io.netty.buffer.ByteBuf;
  *
  * @author Tom Parker
  */
-public class GetChannelsHandler extends AbstractCommandHandler {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GetChannelsHandler.class);
-  //private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+public class GetMetadataHandler extends AbstractCommandHandler {
+  private static final Logger LOGGER = LoggerFactory.getLogger(GetMetadataHandler.class);
 
   private int linesTotal;
   private int linesRead;
   private final List<gov.usgs.volcanoes.winston.Channel> channels;
-  private StringBuffer menu;
+  private StringBuffer metadata;
 
   /**
    * Constructor
    * 
    * @param channels List to be populated with channels
    */
-  public GetChannelsHandler(List<gov.usgs.volcanoes.winston.Channel> channels) {
+  public GetMetadataHandler(List<gov.usgs.volcanoes.winston.Channel> channels) {
     super();
     linesTotal = -Integer.MAX_VALUE;
     linesRead = 0;
-    menu = new StringBuffer();
+    metadata = new StringBuffer();
     this.channels = channels;
   }
 
@@ -57,9 +56,10 @@ public class GetChannelsHandler extends AbstractCommandHandler {
     msgBuf.readBytes(bytes);
     String chunk = new String(bytes);
     linesRead += countLines(chunk);
-    menu.append(chunk);
+    metadata.append(chunk);
     if (linesRead == linesTotal) {
-      for (String line : menu.toString().split("\n")) {
+      for (String line : metadata.toString().split("\n")) {
+        System.out.println(line);
         try {
           channels.add(new Channel.Builder().parse(line).build());
         } catch (UtilException e) {

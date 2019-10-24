@@ -45,9 +45,9 @@ public class GetWaveHandler extends AbstractCommandHandler {
       if (header == null) {
         LOGGER.debug("Still waiting for full response line.");
         return;
-      } else {
+      } else {       
         String[] parts = header.split(" ");
-        length = Integer.parseInt(parts[1]);
+        length = Integer.parseInt(parts[1].trim());
         buf = new ByteArrayOutputStream(length);
         LOGGER.debug("Response length: {}", length);
       }
